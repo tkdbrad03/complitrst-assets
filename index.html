@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CompliTrst Tools | No Subscriptions. Full Ownership.</title>
-    <link rel="icon" type="image/png" href="https://github.com/tkdbrad03/assets/blob/main/complitrst-favicon.png?raw=true">
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/tkdbrad03/assets/main/complitrst-favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -85,18 +85,8 @@
             border-radius: 16px;
             padding: 40px;
             border: 1px solid var(--border-light);
-            transition: all 0.3s ease;
-            text-decoration: none;
-            color: inherit;
-            display: block;
             position: relative;
             overflow: hidden;
-        }
-
-        .tool-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 40px rgba(13, 107, 88, 0.15);
-            border-color: var(--teal);
         }
 
         .tool-card::before {
@@ -107,12 +97,6 @@
             right: 0;
             height: 4px;
             background: linear-gradient(90deg, var(--teal), var(--gold));
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .tool-card:hover::before {
-            opacity: 1;
         }
 
         .tool-header {
@@ -165,19 +149,37 @@
 
         .launch-btn {
             display: inline-block;
-            padding: 14px 32px;
+            padding: 16px 40px;
             background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
             color: white;
             border-radius: 8px;
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 600;
             text-decoration: none;
             transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        .tool-card:hover .launch-btn {
+        .launch-btn:hover {
             transform: scale(1.02);
             box-shadow: 0 4px 15px rgba(201, 162, 39, 0.4);
+        }
+
+        .price-row {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--teal);
+        }
+
+        .price-note {
+            font-size: 0.95rem;
+            color: var(--text-muted);
         }
 
         /* Footer */
@@ -242,7 +244,7 @@
     </header>
 
     <div class="container">
-        <a href="/pdf-signer.html" class="tool-card">
+        <div class="tool-card">
             <div class="tool-header">
                 <div class="tool-icon">&#9997;</div>
                 <h2>PDF Signer & Editor Pro</h2>
@@ -256,8 +258,12 @@
                 <span class="feature-tag">Edit PDF Text</span>
                 <span class="feature-tag">100% Private</span>
             </div>
-            <span class="launch-btn">Launch Tool</span>
-        </a>
+            <div class="price-row">
+                <span class="price">$47</span>
+                <span class="price-note">One-time payment. Yours forever.</span>
+            </div>
+            <a href="https://buy.stripe.com/4gM6oJdgd0yz527dVx1RC03" class="launch-btn">Get Instant Access</a>
+        </div>
     </div>
 
     <footer>
