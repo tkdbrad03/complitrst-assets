@@ -841,7 +841,20 @@
             .header-btn span.full { display: none; }
             .pdf-container { padding: 10px; padding-bottom: 70px; }
             .page-controls { bottom: 10px; padding: 6px 12px; font-size: 0.8rem; }
-            .page-controls .zoom-btns { display: none; }
+            .page-controls .zoom-btns { 
+                display: flex;
+                margin-left: 6px;
+                padding-left: 6px;
+            }
+            .page-controls .zoom-btns button {
+                width: 28px;
+                height: 28px;
+                font-size: 1rem;
+            }
+            .page-controls .zoom-level {
+                min-width: 40px;
+                font-size: 0.7rem;
+            }
             .toast { bottom: 140px; }
         }
     </style>
@@ -887,6 +900,7 @@
                         <button id="zoom-out">−</button>
                         <span class="zoom-level" id="zoom-level">100%</span>
                         <button id="zoom-in">+</button>
+                        <button id="zoom-fit" style="margin-left:4px;width:auto;padding:0 8px;font-size:0.7rem;">Fit</button>
                     </div>
                 </div>
             </div>
@@ -2068,7 +2082,17 @@
             renderPage();
         };
         document.getElementById('zoom-out').onclick = () => {
-            scale = Math.max(scale - 0.25, 0.5);
+            scale = Math.max(scale - 0.25, 0.25);
+            document.getElementById('zoom-level').textContent = Math.round(scale * 100) + '%';
+            renderPage();
+        };
+        document.getElementById('zoom-fit').onclick = async () => {
+            if (!pdfDoc) return;
+            const page = await pdfDoc.getPage(currentPage);
+            const viewport = page.getViewport({ scale: 1 });
+            const containerWidth = pdfViewer.clientWidth - 30; // account for padding
+            scale = containerWidth / viewport.width;
+            scale = Math.max(0.25, Math.min(scale, 2)); // clamp between 25% and 200%
             document.getElementById('zoom-level').textContent = Math.round(scale * 100) + '%';
             renderPage();
         };
