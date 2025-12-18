@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You | CompliTrst Tools</title>
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/tkdbrad03/assets/main/complitrst-favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --teal: #0D6B58;
+            --teal-dark: #0A5647;
+            --teal-light: #0E7D66;
+            --gold: #C9A227;
+            --gold-light: #D4B03A;
+            --gold-dark: #B8921F;
+            --bg-main: #FAFAFA;
+            --bg-card: #FFFFFF;
+            --text-dark: #1A1A1A;
+            --text-muted: #6B7280;
+            --border-light: #E5E7EB;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-main);
+            min-height: 100vh;
+            color: var(--text-dark);
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%);
+            color: white;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .logo-container img {
+            height: 50px;
+            width: auto;
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            opacity: 0.95;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--teal) 0%, var(--teal-light) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            font-size: 40px;
+            color: white;
+        }
+
+        .success-title {
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+        }
+
+        .success-subtitle {
+            font-size: 1.1rem;
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 50px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 35px;
+            border: 1px solid var(--border-light);
+            margin-bottom: 25px;
+        }
+
+        .card h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card h2 .step-num {
+            width: 28px;
+            height: 28px;
+            background: var(--gold);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        .card ul {
+            color: var(--text-muted);
+            line-height: 1.8;
+            margin-left: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card li {
+            margin-bottom: 8px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(13, 107, 88, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--bg-card);
+            color: var(--teal);
+            border: 2px solid var(--teal);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(13, 107, 88, 0.05);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .highlight-box {
+            background: rgba(13, 107, 88, 0.08);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+
+        .highlight-box p {
+            margin: 0;
+            font-size: 0.95rem;
+            color: var(--teal-dark);
+        }
+
+        .highlight-box strong {
+            color: var(--teal);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid var(--border-light);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .footer-brand {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 40px 20px;
+            }
+
+            .success-title {
+                font-size: 1.6rem;
+            }
+
+            .card {
+                padding: 25px;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="https://raw.githubusercontent.com/tkdbrad03/assets/main/complitrst-logo_transparent.png" alt="CompliTrst Logo">
+        </div>
+        <h1>CompliTrst Tools</h1>
+    </header>
+
+    <div class="container">
+        <div class="success-icon">&#10003;</div>
+        <h1 class="success-title">You're In!</h1>
+        <p class="success-subtitle">Your purchase was successful. Here's how to access your tool.</p>
+
+        <div class="card">
+            <h2><span class="step-num">1</span> Use It Online (Recommended)</h2>
+            <p>Access the PDF Signer & Editor Pro instantly in your browser. Works on desktop, tablet, and mobile. No installation needed.</p>
+            <a href="/ct-p7x9k2m4.html" class="btn btn-primary">Launch PDF Signer</a>
+            <div class="highlight-box">
+                <p><strong>Bookmark this page.</strong> Save this success page to return to your tool anytime.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2><span class="step-num">2</span> Download for Offline Use</h2>
+            <p>Want to use it without internet? Download the tool and run it locally on your computer.</p>
+            <div class="btn-group">
+                <a href="/ct-p7x9k2m4.html" download="CompliTrst-PDF-Signer.html" class="btn btn-secondary">Download Tool</a>
+            </div>
+            <div class="highlight-box">
+                <p><strong>How to use offline:</strong> Open the downloaded file in any web browser (Chrome, Safari, Edge, Firefox). That's it.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2><span class="step-num">3</span> Add to Home Screen (Mobile)</h2>
+            <p>For quick access on your phone or tablet:</p>
+            <ul>
+                <li><strong>iPhone/iPad:</strong> Open Safari, tap Share, then "Add to Home Screen"</li>
+                <li><strong>Android:</strong> Open Chrome, tap the menu (3 dots), then "Add to Home Screen"</li>
+            </ul>
+            <p>This creates an app-like icon for instant access.</p>
+        </div>
+    </div>
+
+    <footer>
+        <p><span class="footer-brand">CompliTrst</span> — Pay once. Own it forever.</p>
+        <p style="margin-top: 10px;">Questions? Email support@complitrst.com</p>
+    </footer>
+</body>
+</html>
