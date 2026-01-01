@@ -477,6 +477,43 @@
       border-color: rgba(26,47,35,.65);
       color: #fff;
     }
+    .splash-share{
+  margin-top: 10px;
+}
+
+   
+    /* =========================
+   Share a Recipe (Splash Link)
+   ========================= */
+.share-recipe-link{
+  margin-top: 18px;
+  font-size: 13px;
+  letter-spacing: .04em;
+  text-decoration: none;
+  color: rgba(26,47,35,.75);
+  position: relative;
+}
+
+.share-recipe-link::after{
+  content: "";
+  display: block;
+  height: 1px;
+  width: 100%;
+  margin-top: 4px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(142,113,88,.6),
+    transparent
+  );
+  opacity: .6;
+}
+
+.share-recipe-link:hover{
+  color: rgba(26,47,35,.95);
+}
+
+
 
     /* Print */
     @media print{
@@ -501,6 +538,17 @@
           <button type="button" class="splash-btn primary" onclick="enterCookbook()">Enter Cookbook</button>
           <button type="button" class="splash-btn" onclick="enterAndGo('#desserts')">Jump to Desserts</button>
           <button type="button" class="splash-btn" onclick="enterAndGo('#savory')">Jump to Savory</button>
+           <div class="splash-share">
+  <a
+    href="https://docs.google.com/forms/d/e/1FAIpQLSdhYWTAHVid0Ec4kLCKRh2ZrHegYB8VjefEqBCLPx3VRFfEGw/viewform"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="share-recipe-link"
+  >
+    Share a Recipe
+  </a>
+</div>
+
         </div>
       </div>
     </div>
