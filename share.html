@@ -342,7 +342,7 @@
       const params = new URLSearchParams();
 
       // Prefill fields if IDs are set
-      if(ENTRY_INGREDIENTS && !ENTRY_INGREDIENTS.includes("?")) params.set(ENTRY_INGREDIENTS, ingredientsBox.value.trim());
+      if(ENTRY_ING && !ENTRY_ING.includes("?")) params.set(ENTRY_ING, ingredientsBox.value.trim());
       if(ENTRY_STEPS && !ENTRY_STEPS.includes("?")) params.set(ENTRY_STEPS, stepsBox.value.trim());
       if(ENTRY_NOTES && !ENTRY_NOTES.includes("?")) params.set(ENTRY_NOTES, notesBox.value.trim());
       if(ENTRY_PHOTO_URL && photoUrlValue) params.set(ENTRY_PHOTO_URL, photoUrlValue);
