@@ -478,119 +478,88 @@
         </div>
       </section>
 
-      <div class="content">
-        <div class="box">
-          <h3>Ingredients</h3>
-          <ul class="checklist" data-group="keylime">
-            <li><input id="kl1" type="checkbox"><label for="kl1">1 cup canola or olive oil</label></li>
-            <li><input id="kl2" type="checkbox"><label for="kl2">3 large eggs</label></li>
-            <li><input id="kl3" type="checkbox"><label for="kl3">1⅓ cups whole milk</label></li>
-            <li><input id="kl4" type="checkbox"><label for="kl4">2 tablespoons fresh lime zest</label></li>
-            <li><input id="kl5" type="checkbox"><label for="kl5">1 tablespoon fresh lime juice</label></li>
-            <li><input id="kl6" type="checkbox"><label for="kl6">2 cups sugar</label></li>
-            <li><input id="kl7" type="checkbox"><label for="kl7">2 cups flour</label></li>
-            <li><input id="kl8" type="checkbox"><label for="kl8">1 teaspoon baking powder</label></li>
-            <li><input id="kl9" type="checkbox"><label for="kl9">½ teaspoon baking soda</label></li>
-            <li><input id="kl10" type="checkbox"><label for="kl10">1 teaspoon salt</label></li>
-            <li><input id="kl11" type="checkbox"><label for="kl11">Fresh limes (optional garnish)</label></li>
-          </ul>
+     <div class="content">
+  <div class="box">
+    <h3>Ingredients</h3>
+    <ul class="checklist" data-group="keylime">
+      <li><input id="kl1" type="checkbox"><label for="kl1">1 cup canola or olive oil</label></li>
+      <li><input id="kl2" type="checkbox"><label for="kl2">3 large eggs</label></li>
+      <li><input id="kl3" type="checkbox"><label for="kl3">1⅓ cups whole milk</label></li>
+      <li><input id="kl4" type="checkbox"><label for="kl4">2 tablespoons fresh lime zest</label></li>
+      <li><input id="kl5" type="checkbox"><label for="kl5">1 tablespoon fresh lime juice</label></li>
+      <li><input id="kl6" type="checkbox"><label for="kl6">2 cups sugar</label></li>
+      <li><input id="kl7" type="checkbox"><label for="kl7">2 cups flour</label></li>
+      <li><input id="kl8" type="checkbox"><label for="kl8">1 teaspoon baking powder</label></li>
+      <li><input id="kl9" type="checkbox"><label for="kl9">½ teaspoon baking soda</label></li>
+      <li><input id="kl10" type="checkbox"><label for="kl10">1 teaspoon salt</label></li>
+      <li><input id="kl11" type="checkbox"><label for="kl11">Fresh limes (optional garnish)</label></li>
+    </ul>
 
-          <div class="controls">
-            <button type="button" onclick="resetGroup('keylime')">Reset checkboxes</button>
-            <button type="button" onclick="printSection('key-lime')">Print this recipe</button>
+    <div class="controls">
+      <button type="button" onclick="resetGroup('keylime')">Reset checkboxes</button>
+      <button type="button" onclick="printSection('key-lime')">Print this recipe</button>
+    </div>
+  </div>
+
+  <div class="box">
+    <h3>Instructions</h3>
+    <ol class="steps">
+      <li>Preheat oven to 350°F.</li>
+      <li>In a large mixing bowl, combine oil, eggs, whole milk, lime zest, and lime juice. Cream for 2 minutes.</li>
+      <li>In a separate bowl, combine sugar, flour, baking powder, baking soda, and salt.</li>
+      <li>Stir dry ingredients into the egg mixture and fold until just combined.</li>
+      <li>Spray two 9-inch pans (or three 8-inch pans) with nonstick spray. Divide batter evenly.</li>
+      <li>Bake:
+        <ul>
+          <li>Three 8-inch pans: 20–26 minutes (until a toothpick comes out clean).</li>
+          <li>Two 9-inch pans: 30–36 minutes.</li>
+        </ul>
+      </li>
+      <li>Cool completely before frosting.</li>
+    </ol>
+
+    <p class="notes">
+      Notes: Bake times can vary by pan and oven. Start checking a few minutes early.
+    </p>
+
+    <!-- Frosting now lives INSIDE the Instructions box (matches Mississippi Mud style) -->
+    <details style="margin-top:12px;">
+      <summary>Lime Cream Cheese Frosting (for Key Lime Cake)</summary>
+      <div class="detail-body">
+        <div class="content" style="padding:0; grid-template-columns:1fr 1fr;">
+          <div class="box" style="box-shadow:none;">
+            <h3>Ingredients</h3>
+            <ul class="checklist" data-group="limefrost">
+              <li><input id="lf1" type="checkbox"><label for="lf1">½ cup butter (softened)</label></li>
+              <li><input id="lf2" type="checkbox"><label for="lf2">8 oz cream cheese (softened)</label></li>
+              <li><input id="lf3" type="checkbox"><label for="lf3">4 to 4½ cups powdered sugar</label></li>
+              <li><input id="lf4" type="checkbox"><label for="lf4">1 tablespoon fresh lime juice</label></li>
+              <li><input id="lf5" type="checkbox"><label for="lf5">½ teaspoon fresh lime zest</label></li>
+            </ul>
           </div>
-        </div>
 
-        <div class="box">
-          <h3>Instructions</h3>
-          <ol class="steps">
-            <li>Preheat oven to 350°F.</li>
-            <li>In a large mixing bowl, combine oil, eggs, whole milk, lime zest, and lime juice. Cream for 2 minutes.</li>
-            <li>In a separate bowl, combine sugar, flour, baking powder, baking soda, and salt.</li>
-            <li>Stir dry ingredients into the egg mixture and fold until just combined.</li>
-            <li>Spray two 9-inch pans (or three 8-inch pans) with nonstick spray. Divide batter evenly.</li>
-            <li>Bake:
-              <ul>
-                <li>Three 8-inch pans: 20–26 minutes (until a toothpick comes out clean).</li>
-                <li>Two 9-inch pans: 30–36 minutes.</li>
-              </ul>
-            </li>
-            <li>Cool completely before frosting.</li>
-          </ol>
+          <div class="box" style="box-shadow:none;">
+            <h3>Instructions</h3>
+            <ol class="steps">
+              <li>Cream butter and cream cheese together for 4–5 minutes until light and fluffy. Scrape sides as needed.</li>
+              <li>Add powdered sugar gradually, then add lime juice and lime zest.</li>
+              <li>Beat until smooth and spreadable. Adjust with more sugar (thicker) or a tiny splash of milk (looser), if needed.</li>
+            </ol>
 
-          <p class="notes">
-            Notes: Bake times can vary by pan and oven. Start checking a few minutes early.
-          </p>
-        </div>
-
-        <details class="box" open>
-          <summary>Lime Cream Cheese Frosting (for Key Lime Cake)</summary>
-          <div class="detail-body">
-            <div class="content" style="padding:0; grid-template-columns:1fr 1fr;">
-              <div class="box" style="box-shadow:none;">
-                <h3>Ingredients</h3>
-                <ul class="checklist" data-group="limefrost">
-                  <li><input id="lf1" type="checkbox"><label for="lf1">½ cup butter (softened)</label></li>
-                  <li><input id="lf2" type="checkbox"><label for="lf2">8 oz cream cheese (softened)</label></li>
-                  <li><input id="lf3" type="checkbox"><label for="lf3">4 to 4½ cups powdered sugar</label></li>
-                  <li><input id="lf4" type="checkbox"><label for="lf4">1 tablespoon fresh lime juice</label></li>
-                  <li><input id="lf5" type="checkbox"><label for="lf5">½ teaspoon fresh lime zest</label></li>
-                </ul>
-              </div>
-              <div class="box" style="box-shadow:none;">
-                <h3>Instructions</h3>
-                <ol class="steps">
-                  <li>Cream butter and cream cheese together for 4–5 minutes until light and fluffy. Scrape sides as needed.</li>
-                  <li>Add powdered sugar gradually, then add lime juice and lime zest.</li>
-                  <li>Beat until smooth and spreadable. Adjust with more sugar (thicker) or a tiny splash of milk (looser), if needed.</li>
-                </ol>
-
-                <div class="controls">
-                  <button type="button" onclick="resetGroup('limefrost')">Reset checkboxes</button>
-                </div>
-              </div>
+            <div class="controls">
+              <button type="button" onclick="resetGroup('limefrost')">Reset checkboxes</button>
             </div>
           </div>
-        </details>
-      </div>
-
-      <!-- Cream Cheese Frosting (separate card from your file) -->
-      <section class="section" id="cream-cheese">
-        <h2>Cream Cheese Frosting</h2>
-        <div class="meta">
-          <span class="pill">Frosting</span>
-          <span class="pill">Classic</span>
-          <span class="pill">Pairs well with Red Velvet</span>
-        </div>
-      </section>
-
-      <div class="content">
-        <div class="box">
-          <h3>Ingredients</h3>
-          <ul class="checklist" data-group="ccfrost">
-            <li><input id="cc1" type="checkbox"><label for="cc1">8 oz cream cheese (softened)</label></li>
-            <li><input id="cc2" type="checkbox"><label for="cc2">½ cup unsalted butter (softened)</label></li>
-            <li><input id="cc3" type="checkbox"><label for="cc3">4 cups powdered sugar</label></li>
-            <li><input id="cc4" type="checkbox"><label for="cc4">2 teaspoons vanilla extract</label></li>
-          </ul>
-
-          <div class="controls">
-            <button type="button" onclick="resetGroup('ccfrost')">Reset checkboxes</button>
-            <button type="button" onclick="printSection('cream-cheese')">Print this recipe</button>
-          </div>
-        </div>
-
-        <div class="box">
-          <h3>Instructions</h3>
-          <ol class="steps">
-            <li>Cream butter and cream cheese until smooth and fluffy.</li>
-            <li>Add powdered sugar gradually, beating until smooth.</li>
-            <li>Mix in vanilla extract.</li>
-            <li>Use immediately or refrigerate and re-whip before spreading.</li>
-          </ol>
-          <p class="notes">Notes: If frosting is too soft, chill 10–15 minutes. If too thick, add 1–2 teaspoons milk.</p>
         </div>
       </div>
+    </details>
+
+  </div>
+</div>
+
+             
+
+      
 
       <!-- Red Velvet Cake -->
       <section class="section" id="red-velvet">
