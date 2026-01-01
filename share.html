@@ -197,14 +197,13 @@
 
     // === CONFIG: Put your Google Form *prefill* entry IDs here ===
     // You ALREADY have Photo URL: entry.1845959569 (keep it)
-    // Replace the ??? with the correct IDs for Ingredients + Steps + Notes.
+    // Replace the ??? with the correct IDs for Ingredients + Steps.
     const ENTRY_TITLE = "entry.1770944788";
     const ENTRY_ING   = "entry.991892970";
     const ENTRY_STEPS = "entry.1029695301";
     const ENTRY_PHOTO = "entry.1845959569";
 
-    // If you don't want to prefill Notes, you can leave ENTRY_NOTES blank and we won't include it.
-
+    
     const photoInput = document.getElementById("photoInput");
     const btnExtract = document.getElementById("btnExtract");
     const btnClear = document.getElementById("btnClear");
@@ -344,7 +343,6 @@
       // Prefill fields if IDs are set
       if(ENTRY_ING && !ENTRY_ING.includes("?")) params.set(ENTRY_ING, ingredientsBox.value.trim());
       if(ENTRY_STEPS && !ENTRY_STEPS.includes("?")) params.set(ENTRY_STEPS, stepsBox.value.trim());
-      if(ENTRY_NOTES && !ENTRY_NOTES.includes("?")) params.set(ENTRY_NOTES, notesBox.value.trim());
       if(ENTRY_PHOTO_URL && photoUrlValue) params.set(ENTRY_PHOTO_URL, photoUrlValue);
 
       const url = `${FORM_BASE}?usp=pp_url&${params.toString()}`;
