@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Interactive Cookbook</title>
+
+  <style>
+    :root{
+  /* Core palette */
+  --cream:#FBF6EF;
+  --primary:#e1b6b6;     /* soft rose */
+  --accent-green:#1a2f23; /* deep botanical */
+  --accent-warm:#8e7158;  /* warm taupe */
+
+  /* Re-mapped system colors */
+  --blush: var(--primary);
+  --rose: #e7c2c2;
+  --gold: var(--accent-warm);
+  --ink: #1a2f23;
+  --paper:#FFFFFF;
+
+  /* UI */
+  --shadow: 0 14px 35px rgba(26,47,35,.08);
+  --radius: 18px;
+  --serif: "Georgia", "Times New Roman", serif;
+  --sans: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+
+    *{ box-sizing:border-box; }
+    html{ scroll-behavior:smooth; }
+    body{
+      margin:0;
+      background:
+        radial-gradient(1200px 700px at 10% 10%, rgba(246,214,222,.65), transparent 55%),
+        radial-gradient(1000px 650px at 90% 15%, rgba(200,162,74,.18), transparent 55%),
+        linear-gradient(180deg, var(--cream), #fff);
+      color:var(--ink);
+      font-family:var(--sans);
+      line-height:1.55;
+    }
+
+    /* Layout */
+    .wrap{
+      max-width:1100px;
+      margin:0 auto;
+      padding:28px 18px 70px;
+      display:grid;
+      grid-template-columns: 320px 1fr;
+      gap:18px;
+    }
+    @media (max-width: 980px){
+      .wrap{ grid-template-columns: 1fr; }
+      .toc{ position:relative; top:0; }
+    }
+
+    /* Cards */
+    .card{
+      background:var(--paper);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      border:1px solid rgba(200,162,74,.22);
+      overflow:hidden;
+    }
+    .card .inner{ padding:18px 18px 16px; }
+
+    /* Header / Cover */
+    .cover{
+      grid-column: 1 / -1;
+      border-radius: 26px;
+      overflow:hidden;
+      position:relative;
+      box-shadow: var(--shadow);
+      border:1px solid rgba(200,162,74,.24);
+      background:
+        linear-gradient(120deg, rgba(246,214,222,.95), rgba(251,246,239,.96) 45%, rgba(200,162,74,.12)),
+        radial-gradient(900px 380px at 15% 35%, rgba(233,167,182,.40), transparent 58%);
+    }
+    .cover .inner{
+      padding:34px 26px 28px;
+      display:flex;
+      gap:18px;
+      align-items:flex-end;
+      justify-content:space-between;
+      flex-wrap:wrap;
+    }
+    .title{
+      font-family:var(--serif);
+      letter-spacing:.4px;
+      margin:0;
+      font-size: clamp(30px, 4vw, 44px);
+      line-height:1.08;
+    }
+    .subtitle{
+      margin:10px 0 0;
+      max-width: 720px;
+      font-size: 15px;
+      color: rgba(42,36,34,.82);
+    }
+    .gold-rule{
+      height:2px;
+      width:92px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin:14px 0 0;
+      border-radius:2px;
+    }
+    .badge{
+      padding:10px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.75);
+      border: 1px solid rgba(200,162,74,.35);
+      font-size: 12px;
+      letter-spacing:.2px;
+      white-space:nowrap;
+    }
+
+    /* TOC */
+    .toc{
+      position: sticky;
+      top: 16px;
+      align-self:start;
+    }
+    .toc h2{
+      font-family: var(--serif);
+      margin:0 0 10px;
+      font-size:18px;
+      letter-spacing:.2px;
+    }
+    .toc a{
+      display:block;
+      padding:10px 12px;
+      margin:8px 0;
+      border-radius: 14px;
+      text-decoration:none;
+      color: var(--ink);
+      background: linear-gradient(180deg, rgba(246,214,222,.45), rgba(251,246,239,.85));
+      border: 1px solid rgba(200,162,74,.22);
+      transition: transform .08s ease, background .2s ease;
+    }
+    .toc a:hover{
+      transform: translateY(-1px);
+      background: linear-gradient(180deg, rgba(246,214,222,.65), rgba(251,246,239,.92));
+    }
+    .toc small{
+      display:block;
+      color: rgba(42,36,34,.72);
+      margin-top:8px;
+      font-size:12px;
+    }
+
+    /* Recipe sections */
+    .section{
+      padding:18px 18px 16px;
+      border-bottom: 1px solid rgba(200,162,74,.18);
+      background: linear-gradient(180deg, rgba(251,246,239,.65), rgba(255,255,255,.95));
+    }
+    .section:last-child{ border-bottom:none; }
+
+    .section h2{
+      font-family:var(--serif);
+      margin:0;
+      font-size:22px;
+      letter-spacing:.2px;
+    }
+    .meta{
+      margin:8px 0 0;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      color: rgba(42,36,34,.78);
+      font-size:13px;
+    }
+    .pill{
+      padding:6px 10px;
+      border-radius:999px;
+      background: rgba(246,214,222,.42);
+      border: 1px solid rgba(200,162,74,.22);
+    }
+
+    .content{
+      padding:16px 18px 18px;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    @media (max-width: 860px){
+      .content{ grid-template-columns: 1fr; }
+    }
+
+    .box{
+      border-radius: 18px;
+      border: 1px solid rgba(200,162,74,.20);
+      background: rgba(255,255,255,.90);
+      padding: 14px 14px 12px;
+      box-shadow: 0 10px 24px rgba(0,0,0,.05);
+    }
+    .box h3{
+      font-family: var(--serif);
+      margin:0 0 10px;
+      font-size:16px;
+      letter-spacing:.2px;
+    }
+
+    /* Ingredient checklist */
+    .checklist{
+      list-style:none;
+      padding:0;
+      margin:0;
+      display:grid;
+      gap:8px;
+    }
+    .checklist li{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      padding:9px 10px;
+      border-radius: 14px;
+      border: 1px solid rgba(200,162,74,.18);
+      background: linear-gradient(180deg, rgba(251,246,239,.90), rgba(246,214,222,.22));
+    }
+    .checklist input{
+      margin-top: 2px;
+      accent-color: var(--gold);
+      width: 18px;
+      height: 18px;
+      flex: 0 0 auto;
+    }
+    .checklist label{
+      cursor:pointer;
+      display:block;
+      font-size:14px;
+    }
+
+    /* Steps */
+    ol.steps{
+      margin:0;
+      padding-left: 18px;
+    }
+    ol.steps li{
+      margin: 8px 0;
+      padding: 8px 10px;
+      border-radius: 14px;
+      border: 1px solid rgba(200,162,74,.16);
+      background: rgba(251,246,239,.70);
+    }
+
+    /* Notes */
+    .notes{
+      border-left: 3px solid var(--gold);
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(246,214,222,.25);
+      color: rgba(42,36,34,.86);
+      font-size: 13.5px;
+    }
+
+    /* Controls */
+    .controls{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+    button{
+      border: 1px solid rgba(200,162,74,.35);
+      background: linear-gradient(180deg, rgba(246,214,222,.55), rgba(251,246,239,.95));
+      color: var(--ink);
+      padding: 10px 12px;
+      border-radius: 14px;
+      cursor:pointer;
+      font-size: 13px;
+      transition: transform .08s ease;
+    }
+    button:hover{ transform: translateY(-1px); }
+    button:active{ transform: translateY(0); }
+
+    /* Collapsible */
+    details{
+      border-radius: 18px;
+      border: 1px solid rgba(200,162,74,.20);
+      background: rgba(255,255,255,.92);
+      box-shadow: 0 10px 24px rgba(0,0,0,.05);
+      overflow:hidden;
+    }
+    summary{
+      cursor:pointer;
+      padding: 14px 14px;
+      list-style:none;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      background: linear-gradient(180deg, rgba(246,214,222,.40), rgba(251,246,239,.92));
+      border-bottom: 1px solid rgba(200,162,74,.16);
+      font-family: var(--serif);
+      font-size: 16px;
+    }
+    summary::-webkit-details-marker{ display:none; }
+    details .detail-body{ padding:14px; }
+
+    /* Footer */
+    .footer{
+      grid-column: 1 / -1;
+      text-align:center;
+      color: rgba(42,36,34,.70);
+      font-size:12px;
+      margin-top: 8px;
+    }
+
+    /* Print */
+    @media print{
+      body{ background:#fff; }
+      .wrap{ grid-template-columns: 1fr; }
+      .toc{ display:none; }
+      button{ display:none; }
+      .cover{ break-inside: avoid; }
+      .card{ box-shadow:none; }
+      details{ box-shadow:none; }
+    }
+
+/* === TOC: floating button + slide-out panel === */
+.toc-fab{
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 1000;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(200,162,74,.35);
+  background: linear-gradient(180deg, rgba(246,214,222,.55), rgba(251,246,239,.95));
+  font-size: 13px;
+  box-shadow: 0 12px 28px rgba(0,0,0,.10);
+}
+
+.toc-panel{
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: min(340px, 92vw);
+  background: var(--paper);
+  border-left: 1px solid rgba(200,162,74,.22);
+  box-shadow: -18px 0 40px rgba(0,0,0,.12);
+  transform: translateX(110%);
+  transition: transform .22s ease;
+  z-index: 1001;
+  overflow: auto;
+}
+
+.toc-panel.open{ transform: translateX(0); }
+
+.toc-panel-inner{ padding: 16px; }
+
+.toc-panel-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(200,162,74,.18);
+}
+
+.toc-panel h2{
+  font-family: var(--serif);
+  margin: 0;
+  font-size: 18px;
+}
+
+.toc-close{
+  padding: 8px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+.toc-links{
+  display:grid;
+  gap: 10px;
+  padding: 14px 0;
+}
+
+.toc-links a{
+  display:block;
+  padding:10px 12px;
+  border-radius: 14px;
+  text-decoration:none;
+  color: var(--ink);
+  background: linear-gradient(180deg, rgba(246,214,222,.45), rgba(251,246,239,.85));
+  border: 1px solid rgba(200,162,74,.22);
+}
+
+.toc-tip{
+  display:block;
+  color: rgba(42,36,34,.72);
+  font-size: 12px;
+  padding-bottom: 10px;
+}
+
+.toc-backdrop{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.22);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .22s ease;
+  z-index: 1000;
+}
+
+.toc-backdrop.open{
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Remove the old sidebar behavior if you leave any .toc styles behind */
+.toc{ display:none; }
+
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+
+    <!-- Cover -->
+    <section class="cover card" id="top">
+      <div class="inner">
+        <div>
+          <h1 class="title">Interactive Cookbook</h1>
+          <div class="gold-rule"></div>
+          <p class="subtitle">
+          
+          </p>
+        </div>
+        <div class="badge">Interactive: checklists • collapsible recipes • print-friendly</div>
+      </div>
+    </section>
+
+   <!-- TOC: Floating button + slide-out panel -->
+<button class="toc-fab" type="button" onclick="toggleTOC()" aria-controls="tocPanel" aria-expanded="false">
+  Contents
+</button>
+
+<aside class="toc-panel" id="tocPanel" aria-hidden="true">
+  <div class="toc-panel-inner">
+    <div class="toc-panel-header">
+      <h2>Table of Contents</h2>
+      <button class="toc-close" type="button" onclick="toggleTOC()">Close</button>
+    </div>
+
+    <nav class="toc-links">
+      <a href="#key-lime" onclick="closeTOC()">Key Lime Cake</a>
+      <a href="#cream-cheese" onclick="closeTOC()">Cream Cheese Frosting</a>
+      <a href="#red-velvet" onclick="closeTOC()">Red Velvet Cake (Heritage)</a>
+      <a href="#mississippi-mud" onclick="closeTOC()">Mississippi Mud Cake</a>
+      <a href="#texas-chowchow" onclick="closeTOC()">Texas Chow Chow</a>
+      <a href="#collard-greens" onclick="closeTOC()">Instant Pot Southern Collard Greens</a>
+    </nav>
+
+    <small class="toc-tip">
+      Tip: Use “Reset checkboxes” at the bottom of each recipe to clear your list.
+    </small>
+  </div>
+</aside>
+
+<div class="toc-backdrop" id="tocBackdrop" onclick="closeTOC()" aria-hidden="true"></div>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="card">
+
+      <!-- Key Lime Cake -->
+      <section class="section" id="key-lime">
+        <h2>Key Lime Cake</h2>
+        <div class="meta">
+          <span class="pill">Dessert</span>
+          <span class="pill">Citrus</span>
+          <span class="pill">Pairs with Lime Cream Cheese Frosting</span>
+        </div>
+      </section>
+
+      <div class="content">
+        <div class="box">
+          <h3>Ingredients</h3>
+          <ul class="checklist" data-group="keylime">
+            <li><input id="kl1" type="checkbox"><label for="kl1">1 cup canola or olive oil</label></li>
+            <li><input id="kl2" type="checkbox"><label for="kl2">3 large eggs</label></li>
+            <li><input id="kl3" type="checkbox"><label for="kl3">1⅓ cups whole milk</label></li>
+            <li><input id="kl4" type="checkbox"><label for="kl4">2 tablespoons fresh lime zest</label></li>
+            <li><input id="kl5" type="checkbox"><label for="kl5">1 tablespoon fresh lime juice</label></li>
+            <li><input id="kl6" type="checkbox"><label for="kl6">2 cups sugar</label></li>
+            <li><input id="kl7" type="checkbox"><label for="kl7">2 cups flour</label></li>
+            <li><input id="kl8" type="checkbox"><label for="kl8">1 teaspoon baking powder</label></li>
+            <li><input id="kl9" type="checkbox"><label for="kl9">½ teaspoon baking soda</label></li>
+            <li><input id="kl10" type="checkbox"><label for="kl10">1 teaspoon salt</label></li>
+            <li><input id="kl11" type="checkbox"><label for="kl11">Fresh limes (optional garnish)</label></li>
+          </ul>
+
+          <div class="controls">
+            <button type="button" onclick="resetGroup('keylime')">Reset checkboxes</button>
+            <button type="button" onclick="printSection('key-lime')">Print this recipe</button>
+          </div>
+        </div>
+
+        <div class="box">
+          <h3>Instructions</h3>
+          <ol class="steps">
+            <li>Preheat oven to 350°F.</li>
+            <li>In a large mixing bowl, combine oil, eggs, whole milk, lime zest, and lime juice. Cream for 2 minutes.</li>
+            <li>In a separate bowl, combine sugar, flour, baking powder, baking soda, and salt.</li>
+            <li>Stir dry ingredients into the egg mixture and fold until just combined.</li>
+            <li>Spray two 9-inch pans (or three 8-inch pans) with nonstick spray. Divide batter evenly.</li>
+            <li>Bake:
+              <ul>
+                <li>Three 8-inch pans: 20–26 minutes (until a toothpick comes out clean).</li>
+                <li>Two 9-inch pans: 30–36 minutes.</li>
+              </ul>
+            </li>
+            <li>Cool completely before frosting.</li>
+          </ol>
+
+          <p class="notes">
+            Notes: Bake times can vary by pan and oven. Start checking a few minutes early.
+          </p>
+        </div>
+
+        <details class="box" open>
+          <summary>Lime Cream Cheese Frosting (for Key Lime Cake)</summary>
+          <div class="detail-body">
+            <div class="content" style="padding:0; grid-template-columns:1fr 1fr;">
+              <div class="box" style="box-shadow:none;">
+                <h3>Ingredients</h3>
+                <ul class="checklist" data-group="limefrost">
+                  <li><input id="lf1" type="checkbox"><label for="lf1">½ cup butter (softened)</label></li>
+                  <li><input id="lf2" type="checkbox"><label for="lf2">8 oz cream cheese (softened)</label></li>
+                  <li><input id="lf3" type="checkbox"><label for="lf3">4 to 4½ cups powdered sugar</label></li>
+                  <li><input id="lf4" type="checkbox"><label for="lf4">1 tablespoon fresh lime juice</label></li>
+                  <li><input id="lf5" type="checkbox"><label for="lf5">½ teaspoon fresh lime zest</label></li>
+                </ul>
+              </div>
+              <div class="box" style="box-shadow:none;">
+                <h3>Instructions</h3>
+                <ol class="steps">
+                  <li>Cream butter and cream cheese together for 4–5 minutes until light and fluffy. Scrape sides as needed.</li>
+                  <li>Add powdered sugar gradually, then add lime juice and lime zest.</li>
+                  <li>Beat until smooth and spreadable. Adjust with more sugar (thicker) or a tiny splash of milk (looser), if needed.</li>
+                </ol>
+
+                <div class="controls">
+                  <button type="button" onclick="resetGroup('limefrost')">Reset checkboxes</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <!-- Cream Cheese Frosting (separate card from your file) -->
+      <section class="section" id="cream-cheese">
+        <h2>Cream Cheese Frosting</h2>
+        <div class="meta">
+          <span class="pill">Frosting</span>
+          <span class="pill">Classic</span>
+          <span class="pill">Pairs well with Red Velvet</span>
+        </div>
+      </section>
+
+      <div class="content">
+        <div class="box">
+          <h3>Ingredients</h3>
+          <ul class="checklist" data-group="ccfrost">
+            <li><input id="cc1" type="checkbox"><label for="cc1">8 oz cream cheese (softened)</label></li>
+            <li><input id="cc2" type="checkbox"><label for="cc2">½ cup unsalted butter (softened)</label></li>
+            <li><input id="cc3" type="checkbox"><label for="cc3">4 cups powdered sugar</label></li>
+            <li><input id="cc4" type="checkbox"><label for="cc4">2 teaspoons vanilla extract</label></li>
+          </ul>
+
+          <div class="controls">
+            <button type="button" onclick="resetGroup('ccfrost')">Reset checkboxes</button>
+            <button type="button" onclick="printSection('cream-cheese')">Print this recipe</button>
+          </div>
+        </div>
+
+        <div class="box">
+          <h3>Instructions</h3>
+          <ol class="steps">
+            <li>Cream butter and cream cheese until smooth and fluffy.</li>
+            <li>Add powdered sugar gradually, beating until smooth.</li>
+            <li>Mix in vanilla extract.</li>
+            <li>Use immediately or refrigerate and re-whip before spreading.</li>
+          </ol>
+          <p class="notes">Notes: If frosting is too soft, chill 10–15 minutes. If too thick, add 1–2 teaspoons milk.</p>
+        </div>
+      </div>
+
+      <!-- Red Velvet Cake -->
+      <section class="section" id="red-velvet">
+        <h2>Red Velvet Cake (Heritage Recipe)</h2>
+        <div class="meta">
+          <span class="pill">Dessert</span>
+          <span class="pill">Handwritten original</span>
+          <span class="pill">Bake 350°F</span>
+        </div>
+      </section>
+
+      <div class="content">
+        <div class="box">
+          <h3>Ingredients</h3>
+          <ul class="checklist" data-group="redvelvet">
+            <li><input id="rv1" type="checkbox"><label for="rv1">2 cups sugar</label></li>
+            <li><input id="rv2" type="checkbox"><label for="rv2">3 eggs</label></li>
+            <li><input id="rv3" type="checkbox"><label for="rv3">1 tablespoon vinegar</label></li>
+            <li><input id="rv4" type="checkbox"><label for="rv4">1 teaspoon cocoa</label></li>
+            <li><input id="rv5" type="checkbox"><label for="rv5">2 (1 oz) bottles red food coloring</label></li>
+            <li><input id="rv6" type="checkbox"><label for="rv6">1 teaspoon vanilla</label></li>
+            <li><input id="rv7" type="checkbox"><label for="rv7">2½ cups plain flour</label></li>
+            <li><input id="rv8" type="checkbox"><label for="rv8">1 cup buttermilk</label></li>
+            <li><input id="rv9" type="checkbox"><label for="rv9">½ cup butter</label></li>
+            <li><input id="rv10" type="checkbox"><label for="rv10">1 teaspoon salt</label></li>
+            <li><input id="rv11" type="checkbox"><label for="rv11">½ teaspoon baking powder</label></li>
+            <li><input id="rv12" type="checkbox"><label for="rv12">1½ teaspoons baking soda</label></li>
+          </ul>
+
+          <div class="controls">
+            <button type="button" onclick="resetGroup('redvelvet')">Reset checkboxes</button>
+            <button type="button" onclick="printSection('red-velvet')">Print this recipe</button>
+          </div>
+        </div>
+
+        <div class="box">
+          <h3>Instructions</h3>
+          <ol class="steps">
+            <li>Cream sugar and butter.</li>
+            <li>Add eggs one at a time.</li>
+            <li>Make a paste with vinegar, cocoa, and food coloring; add to the creamed mixture.</li>
+            <li>Add flour and buttermilk alternately.</li>
+            <li>Add vanilla.</li>
+            <li>Pour into 3-layer pans or a sheet pan (makes 3 layers).</li>
+            <li>Bake at 350°F for 25–30 minutes. Cool completely.</li>
+            <li>Frost with cream cheese frosting.</li>
+          </ol>
+
+          <p class="notes">
+            Notes: This recipe is transcribed directly from your handwritten card. If you want, I can convert it into a standardized “modern format” with measured pan sizes and cooling notes.
+          </p>
+        </div>
+      </div>
+
+      <!-- Mississippi Mud Cake -->
+      <section class="section" id="mississippi-mud">
+        <h2>Mississippi Mud Cake</h2>
+        <div class="meta">
+          <span class="pill">Dessert</span>
+          <span class="pill">Chocolate</span>
+          <span class="pill">Marshmallow topping</span>
+        </div>
+      </section>
+
+      <div class="content">
+        <div class="box">
+          <h3>Cake Ingredients</h3>
+          <ul class="checklist" data-group="mudcake">
+            <li><input id="mm1" type="checkbox"><label for="mm1">2 cups sugar</label></li>
+            <li><input id="mm2" type="checkbox"><label for="mm2">4 eggs</label></li>
+            <li><input id="mm3" type="checkbox"><label for="mm3">¾ cup self-rising flour</label></li>
+            <li><input id="mm4" type="checkbox"><label for="mm4">2 sticks melted butter</label></li>
+            <li><input id="mm5" type="checkbox"><label for="mm5">2 teaspoons vanilla</label></li>
+            <li><input id="mm6" type="checkbox"><label for="mm6">1 cup pecans</label></li>
+            <li><input id="mm7" type="checkbox"><label for="mm7">⅓ cup cocoa</label></li>
+            <li><input id="mm8" type="checkbox"><label for="mm8">Mini marshmallows or marshmallow creme (for topping)</label></li>
+          </ul>
+
+          <div class="controls">
+            <button type="button" onclick="resetGroup('mudcake')">Reset checkboxes</button>
+            <button type="button" onclick="printSection('mississippi-mud')">Print this recipe</button>
+          </div>
+        </div>
+
+        <div class="box">
+          <h3>Instructions</h3>
+          <ol class="steps">
+            <li>Mix cake ingredients together until combined.</li>
+            <li>Bake for about 25 minutes (time and pan size can vary).</li>
+            <li>While hot, put mini marshmallows (or marshmallow creme) on top.</li>
+            <li>Spread chocolate icing over the marshmallow layer.</li>
+          </ol>
+
+          <details style="margin-top:12px;">
+            <summary>Chocolate Icing (for Mississippi Mud Cake)</summary>
+            <div class="detail-body">
+              <ul class="checklist" data-group="mudicing">
+                <li><input id="mi1" type="checkbox"><label for="mi1">1 stick butter</label></li>
+                <li><input id="mi2" type="checkbox"><label for="mi2">2 cups powdered sugar</label></li>
+                <li><input id="mi3" type="checkbox"><label for="mi3">¼ cup cocoa</label></li>
+                <li><input id="mi4" type="checkbox"><label for="mi4">1 teaspoon vanilla</label></li>
+              </ul>
+              <p class="notes" style="margin-top:10px;">
+                Notes: The handwritten card lists these ingredients for the icing; you can mix until smooth and spread over the marshmallow layer while the cake is still warm.
+              </p>
+              <div class="controls">
+                <button type="button" onclick="resetGroup('mudicing')">Reset checkboxes</button>
+              </div>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <!-- Texas Chow Chow -->
+      <section class="section" id="texas-chowchow">
+        <h2>Texas Chow Chow</h2>
+        <div class="meta">
+          <span class="pill">Condiment</span>
+          <span class="pill">Heritage</span>
+          <span class="pill">Batch recipe</span>
+        </div>
+      </section>
+
+      <div class="content">
+        <div class="box">
+          <h3>Ingredients (as written)</h3>
+          <ul class="checklist" data-group="chowchow">
+            <li><input id="tc1" type="checkbox"><label for="tc1">6½ lbs green tomatoes (about 1 gallon chopped)</label></li>
+            <li><input id="tc2" type="checkbox"><label for="tc2">6 lbs onions</label></li>
+            <li><input id="tc3" type="checkbox"><label for="tc3">10 lbs cabbage</label></li>
+            <li><input id="tc4" type="checkbox"><label for="tc4">¼ lb hot peppers (mixed red &amp; green)</label></li>
+            <li><input id="tc5" type="checkbox"><label for="tc5">4 bell peppers (2 red, 2 green)</label></li>
+            <li><input id="tc6" type="checkbox"><label for="tc6">10 lbs sugar</label></li>
+            <li><input id="tc7" type="checkbox"><label for="tc7">3 quarts apple cider vinegar</label></li>
+          </ul>
+
+          <div class="controls">
+            <button type="button" onclick="resetGroup('chowchow')">Reset checkboxes</button>
+            <button type="button" onclick="printSection('texas-chowchow')">Print this recipe</button>
+          </div>
+        </div>
+
+        <div class="box">
+          <h3>Directions (heritage-style)</h3>
+          <ol class="steps">
+            <li>Chop tomatoes, onions, peppers, and cabbage.</li>
+            <li>Sprinkle lightly with salt and refrigerate overnight.</li>
+            <li>Drain excess liquid the next day.</li>
+            <li>Cook with sugar and apple cider vinegar until the mixture is tender and the liquid reduces to your preferred consistency.</li>
+            <li>Jar using proper canning practices, or refrigerate for short-term use.</li>
+          </ol>
+
+          <p class="notes">
+            Notes: The handwritten instructions are partially abbreviated. If you tell me your preferred storage method (refrigerator vs. canning), I can rewrite this into a precise, step-by-step version.
+          </p>
+        </div>
+      </div>
+
+      <!-- Instant Pot Southern Collard Greens -->
+      <section class="section" id="collard-greens">
+        <h2>Instant Pot Southern Collard Greens</h2>
+        <div class="meta">
+          <span class="pill">Savory</span>
+          <span class="pill">Instant Pot</span>
+          <span class="pill">25 minutes (High Pressure)</span>
+        </div>
+      </section>
+
+      <div class="content">
+        <div class="box">
+          <h3>Ingredients</h3>
+          <ul class="checklist" data-group="collards">
+            <li><input id="cg1" type="checkbox"><label for="cg1">1 tablespoon olive oil</label></li>
+            <li><input id="cg2" type="checkbox"><label for="cg2">1 cup chopped white onion</label></li>
+            <li><input id="cg3" type="checkbox"><label for="cg3">2 garlic cloves, minced</label></li>
+            <li><input id="cg4" type="checkbox"><label for="cg4">1 pound collard greens, trimmed and washed (pre-washed ok)</label></li>
+            <li><input id="cg5" type="checkbox"><label for="cg5">Optional: mix greens (often ¾ collards + ¼ mustard greens)</label></li>
+            <li><input id="cg6" type="checkbox"><label for="cg6">1 smoked turkey leg or turkey wing (about 1 to 1½ pounds), fully cooked (or ham hocks)</label></li>
+            <li><input id="cg7" type="checkbox"><label for="cg7">1½ cups chicken broth</label></li>
+            <li><input id="cg8" type="checkbox"><label for="cg8">½ tablespoon Creole seasoning</label></li>
+          </ul>
+
+          <div class="controls">
+            <button type="button" onclick="resetGroup('collards')">Reset checkboxes</button>
+            <button type="button" onclick="printSection('collard-greens')">Print this recipe</button>
+          </div>
+        </div>
+
+        <div class="box">
+          <h3>Instructions</h3>
+          <ol class="steps">
+            <li>Place the Instant Pot on the Sauté function. Add olive oil and onions.</li>
+            <li>Cook 2–3 minutes until translucent and fragrant.</li>
+            <li>Add garlic and stir.</li>
+            <li>Add half of the collard greens to the pot. Layer in the turkey leg, then add remaining greens (they will wilt down a lot).</li>
+            <li>Add chicken broth and Creole seasoning.</li>
+            <li>Place lid on and seal.</li>
+            <li>Cook for 25 minutes on Manual &gt; High Pressure.</li>
+            <li>When finished, quick release the steam.</li>
+            <li>Open, remove turkey, shred meat from the bone, return meat to the pot. Stir and serve.</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- Source + End -->
+      <section class="section" id="source">
+        <h2>Source Notes</h2>
+      </section>
+      <div class="content">
+        <div class="box" style="grid-column:1/-1;">
+          <p class="notes" style="margin:0;">
+            All recipes above were transcribed from handwritten and typed pages.
+          </p>
+          <div class="controls">
+            <button type="button" onclick="window.location.href='#top'">Back to top</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <div class="footer">
+      Interactive checklists • Print-friendly layout
+    </div>
+  </div>
+
+  <script>
+    // Reset all checkboxes within a named group
+    function resetGroup(groupName){
+      const group = document.querySelectorAll('[data-group="' + groupName + '"] input[type="checkbox"]');
+      group.forEach(cb => cb.checked = false);
+    }
+
+    // Print a single recipe section by cloning it into a temporary window
+    function printSection(sectionId){
+      const section = document.getElementById(sectionId);
+      if(!section) return;
+
+      // Find the next siblings until the next .section header or end of main
+      const main = section.closest('main');
+      const nodes = [];
+      let current = section;
+      nodes.push(current.cloneNode(true));
+
+      current = section.nextElementSibling;
+      while(current && !current.classList.contains('section')){
+        nodes.push(current.cloneNode(true));
+        current = current.nextElementSibling;
+      }
+
+      const printWin = window.open('', '_blank', 'width=900,height=650');
+      const styles = document.querySelector('style').innerHTML;
+
+      printWin.document.write(`
+        <html>
+          <head>
+            <title>Print Recipe</title>
+            <meta charset="utf-8"/>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+            <style>${styles}</style>
+          </head>
+          <body>
+            <div class="wrap" style="grid-template-columns:1fr; max-width:900px;">
+              <main class="card">
+                ${nodes.map(n => n.outerHTML).join('')}
+              </main>
+            </div>
+            <script>
+              // Hide buttons in print window
+              document.querySelectorAll('button').forEach(b => b.style.display='none');
+              window.onload = () => window.print();
+            <\/script>
+          </body>
+        </html>
+      `);
+      printWin.document.close();
+    }
+function toggleTOC(){
+  const panel = document.getElementById('tocPanel');
+  const backdrop = document.getElementById('tocBackdrop');
+  const fab = document.querySelector('.toc-fab');
+
+  const isOpen = panel.classList.toggle('open');
+  backdrop.classList.toggle('open', isOpen);
+
+  panel.setAttribute('aria-hidden', (!isOpen).toString());
+  fab.setAttribute('aria-expanded', isOpen.toString());
+
+  if(isOpen){
+    // prevent background scroll on mobile
+    document.body.style.overflow = 'hidden';
+  } else {
+    document.body.style.overflow = '';
+  }
+}
+
+function closeTOC(){
+  const panel = document.getElementById('tocPanel');
+  const backdrop = document.getElementById('tocBackdrop');
+  const fab = document.querySelector('.toc-fab');
+
+  panel.classList.remove('open');
+  backdrop.classList.remove('open');
+  panel.setAttribute('aria-hidden','true');
+  fab.setAttribute('aria-expanded','false');
+  document.body.style.overflow = '';
+}
+  </script>
+</body>
+</html>
