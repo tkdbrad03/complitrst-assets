@@ -343,7 +343,7 @@
       // Prefill fields if IDs are set
       if(ENTRY_ING && !ENTRY_ING.includes("?")) params.set(ENTRY_ING, ingredientsBox.value.trim());
       if(ENTRY_STEPS && !ENTRY_STEPS.includes("?")) params.set(ENTRY_STEPS, stepsBox.value.trim());
-      if(ENTRY_PHOTO_URL && photoUrlValue) params.set(ENTRY_PHOTO_URL, photoUrlValue);
+      
 
       const url = `${FORM_BASE}?usp=pp_url&${params.toString()}`;
       window.location.href = url;
