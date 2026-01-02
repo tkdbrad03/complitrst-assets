@@ -521,7 +521,7 @@
 
         // Submit directly to Google Form
         await fetch(FORM_BASE, {
-          method: "GET",
+          method: "POST",
           body: formData,
           mode: "no-cors" // Required for Google Forms
         });
