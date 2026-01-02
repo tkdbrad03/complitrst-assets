@@ -1036,41 +1036,57 @@
 const sheetURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSPn0KHuAKxZC2aeYt1DdqLWqNzvrcx5AJbovOGqdzXXuOjFuAzQaR3uCRgtIdfb1a1RX26TPUO6bL8/pub?output=tsv';
 
 fetch(sheetURL)
-  .then(res => res.text())
+  .then(response => response.text())
   .then(data => {
-    const lines = data.trim().split('\n');
-    const headers = lines[0].split('\t');
-    const recipes = lines.slice(1).map(row => {
-      const values = row.split('\t');
-      const obj = {};
-      headers.forEach((key, i) => obj[key.trim()] = values[i]?.trim());
-      return obj;
-    });
+    const rows = data.trim().split('\n').map(row => row.split('\t'));
+    const categories = {}; // cache sections by category name
 
-    const grouped = {};
-    recipes.forEach(recipe => {
-      const category = recipe.Category || "Uncategorized";
-      if (!grouped[category]) grouped[category] = [];
-      grouped[category].push(recipe);
-    });
+    for (let i = 1; i < rows.length; i++) {
+      const row = rows[i];
+      const title = row[0]?.trim();
+      const ingredients = row[1]?.trim();
+      const steps = row[2]?.trim();
+      const notes = row[3]?.trim();
+      const category = row[4]?.trim();
 
-    let output = "";
-    for (const [category, items] of Object.entries(grouped)) {
-      output += `<section class="recipe-section"><h2 class="recipe-heading">${category}</h2>`;
-      for (const r of items) {
-        output += `
-          <article class="recipe-card">
-            <h3>${r.Title || "Untitled"}</h3>
-            <p><strong>Ingredients:</strong> ${r.Ingredients}</p>
-            <p><strong>Steps:</strong> ${r.Steps}</p>
-            <p><strong>Notes:</strong> ${r.Notes || ""}</p>
-          </article>
-        `;
+      if (!title || !category) continue;
+
+      let section = categories[category];
+      if (!section) {
+        // Try to find existing category section in DOM
+        section = document.getElementById(category);
+        
+        // If not found, create new section above Source Notes
+        if (!section) {
+          section = document.createElement('div');
+          section.id = category;
+          section.innerHTML = `<h2>${category}</h2>`;
+          
+          const sourceNotes = document.getElementById('source-notes');
+          if (sourceNotes) {
+            sourceNotes.parentNode.insertBefore(section, sourceNotes);
+          } else {
+            document.getElementById('main-content').appendChild(section);
+          }
+        }
+
+        categories[category] = section;
       }
-      output += "</section>";
-    }
 
-    document.getElementById("dynamic-recipes").innerHTML = output;
+      // Add the recipe card
+      const recipeHTML = `
+        <div class="recipe-card">
+          <h3>${title}</h3>
+          <h4>Ingredients</h4>
+          <p>${ingredients}</p>
+          <h4>Steps</h4>
+          <p>${steps}</p>
+          ${notes ? `<h4>Notes</h4><p>${notes}</p>` : ''}
+        </div>
+      `;
+      section.insertAdjacentHTML('beforeend', recipeHTML);
+    }
   });
-</script></body>
+</script>
+</body>
 </html>
