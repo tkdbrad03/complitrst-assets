@@ -56,7 +56,7 @@
     label .required{ color:#d64545; }
     label .hint{ font-weight:400; font-size:11px; color:rgba(42,36,34,.58); }
     
-    input[type="text"], textarea, select{
+    input[type="text"], input[type="file"], textarea, select{
       width:100%;
       border-radius:14px;
       border:1px solid rgba(142,113,88,.22);
@@ -262,18 +262,19 @@
   </div>
 
   <script>
-    // === CONFIG: Put your Google Form base URL and entry IDs here ===
-    const FORM_BASE = "https://docs.google.com/forms/d/e/1FAIpQLSdhYWTAHVid0Ec4kLCKRh2ZrHegYB8VjefEqBCLPx3VRFfEGw/viewform";
+    // === CONFIG ===
+    const FORM_BASE = "https://docs.google.com/forms/d/e/1FAIpQLSdhYWTAHVid0Ec4kLCKRh2ZrHegYB8VjefEqBCLPx3VRFfEGw/formResponse";
+    const UPLOAD_API = "/api/upload"; // Vercel function endpoint
     
-    // Entry IDs from your Google Form (get these by inspecting the form)
-    const ENTRY_TITLE = "entry.1770944788";      // Recipe Title
-    const ENTRY_CATEGORY = "entry.YOUR_ID_HERE";  // Category (you'll need to add this)
-    const ENTRY_TAGS = "entry.YOUR_ID_HERE";      // Tags (you'll need to add this)
-    const ENTRY_TIME = "entry.YOUR_ID_HERE";      // Time (you'll need to add this)
-    const ENTRY_ING = "entry.991892970";          // Ingredients
-    const ENTRY_STEPS = "entry.1029695301";       // Steps/Directions
-    const ENTRY_NOTES = "entry.YOUR_ID_HERE";     // Notes (you'll need to add this)
-    const ENTRY_PHOTO = "entry.1845959569";       // Photo URL (optional)
+    // Entry IDs from your Google Form
+    const ENTRY_TITLE = "entry.1770944788";
+    const ENTRY_CATEGORY = "entry.1070788598";
+    const ENTRY_TAGS = "entry.1873529935";
+    const ENTRY_TIME = "entry.1741960360";
+    const ENTRY_ING = "entry.991892970";
+    const ENTRY_STEPS = "entry.1029695301";
+    const ENTRY_NOTES = "entry.449103203";
+    const ENTRY_PHOTO = "entry.940284355";
 
     // Form elements
     const photoInput = document.getElementById("photoInput");
@@ -298,6 +299,7 @@
     const notesBox = document.getElementById("notesBox");
 
     let fileBlob = null;
+    let uploadedPhotoUrl = null;
 
     function setProgress(pct, msg){
       status.style.display = "flex";
@@ -307,6 +309,7 @@
 
     function resetAll(){
       fileBlob = null;
+      uploadedPhotoUrl = null;
       photoInput.value = "";
       imgWrap.style.display = "none";
       previewImg.src = "";
@@ -340,6 +343,7 @@
 
     btnClear.addEventListener("click", () => {
       fileBlob = null;
+      uploadedPhotoUrl = null;
       photoInput.value = "";
       imgWrap.style.display = "none";
       previewImg.src = "";
@@ -434,7 +438,37 @@
       }
     });
 
-    btnSubmit.addEventListener("click", () => {
+    // Upload photo to Vercel Blob Storage
+    async function uploadPhoto(){
+      if(!fileBlob) return null;
+
+      try {
+        setProgress(10, "Uploading photo to storage…");
+        
+        const formData = new FormData();
+        formData.append("file", fileBlob);
+
+        const response = await fetch(UPLOAD_API, {
+          method: "POST",
+          body: formData
+        });
+
+        if(!response.ok) {
+          throw new Error("Upload failed");
+        }
+
+        const data = await response.json();
+        setProgress(50, "Photo uploaded successfully!");
+        
+        return data.url;
+      } catch(err) {
+        console.error("Photo upload error:", err);
+        alert("Photo upload failed. The recipe will be submitted without a photo.");
+        return null;
+      }
+    }
+
+    btnSubmit.addEventListener("click", async () => {
       // Validate required fields
       if (!titleBox.value.trim()) {
         alert("Please enter a recipe title.");
@@ -457,39 +491,56 @@
         return;
       }
 
-      const params = new URLSearchParams();
+      // Disable submit button to prevent double-submission
+      btnSubmit.disabled = true;
 
-      // Add all fields to the form URL
-      params.set(ENTRY_TITLE, titleBox.value.trim());
-      
-      if(ENTRY_CATEGORY && !ENTRY_CATEGORY.includes("YOUR_ID")) {
-        params.set(ENTRY_CATEGORY, categoryBox.value);
-      }
-      
-      if(ENTRY_TAGS && !ENTRY_TAGS.includes("YOUR_ID")) {
-        params.set(ENTRY_TAGS, tagsBox.value.trim());
-      }
-      
-      if(ENTRY_TIME && !ENTRY_TIME.includes("YOUR_ID")) {
-        params.set(ENTRY_TIME, timeBox.value.trim());
-      }
-      
-      // Convert newlines to pipes for ingredients and steps
-      params.set(ENTRY_ING, normalizeToPipes(ingredientsBox.value));
-      params.set(ENTRY_STEPS, normalizeToPipes(stepsBox.value));
-      
-      if(ENTRY_NOTES && !ENTRY_NOTES.includes("YOUR_ID")) {
-        params.set(ENTRY_NOTES, notesBox.value.trim());
-      }
+      try {
+        // Upload photo if present
+        if(fileBlob) {
+          uploadedPhotoUrl = await uploadPhoto();
+        }
 
-      // If you have a photo upload system that generates URLs, set it here
-      // For now we're leaving this empty
-      // if(ENTRY_PHOTO && photoUrlValue) {
-      //   params.set(ENTRY_PHOTO, photoUrlValue);
-      // }
+        setProgress(75, "Preparing form submission…");
 
-      const url = `${FORM_BASE}?usp=pp_url&${params.toString()}`;
-      window.location.href = url;
+        // Create form data for direct submission
+        const formData = new FormData();
+        
+        formData.append(ENTRY_TITLE, titleBox.value.trim());
+        formData.append(ENTRY_CATEGORY, categoryBox.value);
+        formData.append(ENTRY_TAGS, tagsBox.value.trim());
+        formData.append(ENTRY_TIME, timeBox.value.trim());
+        formData.append(ENTRY_ING, normalizeToPipes(ingredientsBox.value));
+        formData.append(ENTRY_STEPS, normalizeToPipes(stepsBox.value));
+        formData.append(ENTRY_NOTES, notesBox.value.trim());
+        
+        if(uploadedPhotoUrl) {
+          formData.append(ENTRY_PHOTO, uploadedPhotoUrl);
+        }
+
+        setProgress(90, "Submitting to cookbook…");
+
+        // Submit directly to Google Form
+        await fetch(FORM_BASE, {
+          method: "POST",
+          body: formData,
+          mode: "no-cors" // Required for Google Forms
+        });
+
+        setProgress(100, "Recipe submitted successfully!");
+
+        // Show success message
+        alert("Recipe submitted successfully! It will appear in the cookbook within a few minutes.");
+        
+        // Reset form
+        resetAll();
+
+      } catch(err) {
+        console.error("Submission error:", err);
+        alert("There was an error submitting the recipe. Please try again.");
+      } finally {
+        btnSubmit.disabled = false;
+        status.style.display = "none";
+      }
     });
   </script>
 </body>
