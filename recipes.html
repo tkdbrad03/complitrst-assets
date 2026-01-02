@@ -1,11 +1,11 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Interactive Cookbook</title>
-
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Interactive Cookbook</title>
+<style>
     :root{
       /* Your palette */
       --primary:#e1b6b6;        /* soft rose */
@@ -525,505 +525,405 @@
     }
   </style>
 </head>
-<script>
-const sheetID = '1MwdL2FF4qjztEXQZqNtxBIkJ2zHpqIb1dmSAfWielMI';
-const tabName = 'Recipes';
-
-const sheetURL = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:json&sheet=${tabName}`;
-
-fetch(sheetURL)
-  .then(res => res.text())
-  .then(text => {
-    const json = JSON.parse(text.substring(47).slice(0, -2));
-    const cols = json.table.cols.map(col => col.label);
-    const rows = json.table.rows;
-
-    const container = document.querySelector("#dynamic-recipes");
-
-    rows.forEach(row => {
-      const rowObj = {};
-      cols.forEach((label, i) => {
-        rowObj[label] = row.c[i] ? row.c[i].v : '';
-      });
-
-      // Clean field access
-      const title = rowObj["Recipe Title"] || "Untitled Recipe";
-      const ingredients = rowObj["Ingredients"] || "";
-      const steps = rowObj["Instructions / Steps"] || "";
-      const notes = rowObj["Notes"] || "";
-      const imageURL = rowObj["Photo URL"] || "";
-
-      const card = document.createElement("div");
-      card.className = "card";
-      card.innerHTML = `
-        <div class="inner">
-          <h2>${title}</h2>
-          ${imageURL ? `<img src="${imageURL}" alt="${title}" style="max-width:100%;border-radius:12px;margin-top:12px;" />` : ""}
-          <p><strong>Ingredients:</strong><br>${ingredients.replace(/\n/g, '<br>')}</p>
-          <p><strong>Steps:</strong><br>${steps.replace(/\n/g, '<br>')}</p>
-          <p><strong>Notes:</strong><br>${notes.replace(/\n/g, '<br>')}</p>
-        </div>
-      `;
-      container.appendChild(card);
-    });
-  })
-  .catch(err => {
-    console.error("Error loading recipes:", err);
-  });
-</script>
-
 <body>
-
-  <!-- Splash / Cover Screen -->
-  <div class="splash" id="splash" role="dialog" aria-modal="true">
-    <div class="splash-card">
-      <div class="splash-frame">
-        <h1 class="splash-title">Interactive Cookbook</h1>
-
-        <div class="splash-actions">
-          <button type="button" class="splash-btn primary" onclick="enterCookbook()">Enter Cookbook</button>
-          <button type="button" class="splash-btn" onclick="enterAndGo('#desserts')">Jump to Desserts</button>
-          <button type="button" class="splash-btn" onclick="enterAndGo('#savory')">Jump to Savory</button>
-           <div class="splash-share">
-  <a href="/share" target="_blank" rel="noopener noreferrer" class="share-recipe-link">
+<!-- Splash / Cover Screen -->
+<div aria-modal="true" class="splash" id="splash" role="dialog">
+<div class="splash-card">
+<div class="splash-frame">
+<h1 class="splash-title">Interactive Cookbook</h1>
+<div class="splash-actions">
+<button class="splash-btn primary" onclick="enterCookbook()" type="button">Enter Cookbook</button>
+<button class="splash-btn" onclick="enterAndGo('#desserts')" type="button">Jump to Desserts</button>
+<button class="splash-btn" onclick="enterAndGo('#savory')" type="button">Jump to Savory</button>
+<div class="splash-share">
+<a class="share-recipe-link" href="/share" rel="noopener noreferrer" target="_blank">
   Share a Recipe
 </a>
 </div>
-
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Mobile TOC -->
-  <button class="toc-fab" type="button" onclick="toggleTOC()" aria-controls="tocPanel" aria-expanded="false">
+</div>
+</div>
+</div>
+</div>
+<!-- Mobile TOC -->
+<button aria-controls="tocPanel" aria-expanded="false" class="toc-fab" onclick="toggleTOC()" type="button">
     Contents
   </button>
-
-  <aside class="toc-panel" id="tocPanel" aria-hidden="true">
-    <div class="toc-panel-inner">
-      <div class="toc-panel-header">
-        <h2>Table of Contents</h2>
-        <button class="toc-close" type="button" onclick="closeTOC()">Close</button>
-      </div>
-
-      <nav class="toc-links">
-        <a href="#desserts" onclick="closeTOC()">Desserts</a>
-        <a href="#key-lime" onclick="closeTOC()">Key Lime Cake</a>
-        <a href="#cream-cheese" onclick="closeTOC()">Cream Cheese Frosting</a>
-        <a href="#red-velvet" onclick="closeTOC()">Red Velvet Cake (Heritage)</a>
-        <a href="#mississippi-mud" onclick="closeTOC()">Mississippi Mud Cake</a>
-
-        <a href="#savory" onclick="closeTOC()">Savory</a>
-        <a href="#texas-chowchow" onclick="closeTOC()">Texas Chow Chow</a>
-        <a href="#collard-greens" onclick="closeTOC()">Instant Pot Southern Collard Greens</a>
-
-        <a href="#source" onclick="closeTOC()">Source Notes</a>
-      </nav>
-
-      <small class="toc-tip">
+<aside aria-hidden="true" class="toc-panel" id="tocPanel">
+<div class="toc-panel-inner">
+<div class="toc-panel-header">
+<h2>Table of Contents</h2>
+<button class="toc-close" onclick="closeTOC()" type="button">Close</button>
+</div>
+<nav class="toc-links">
+<a href="#desserts" onclick="closeTOC()">Desserts</a>
+<a href="#key-lime" onclick="closeTOC()">Key Lime Cake</a>
+<a href="#cream-cheese" onclick="closeTOC()">Cream Cheese Frosting</a>
+<a href="#red-velvet" onclick="closeTOC()">Red Velvet Cake (Heritage)</a>
+<a href="#mississippi-mud" onclick="closeTOC()">Mississippi Mud Cake</a>
+<a href="#savory" onclick="closeTOC()">Savory</a>
+<a href="#texas-chowchow" onclick="closeTOC()">Texas Chow Chow</a>
+<a href="#collard-greens" onclick="closeTOC()">Instant Pot Southern Collard Greens</a>
+<a href="#source" onclick="closeTOC()">Source Notes</a>
+</nav>
+<small class="toc-tip">
         Tip: Use “Reset checkboxes” at the bottom of each recipe to clear your ingredient list.
       </small>
-    </div>
-  </aside>
-
-  <div class="toc-backdrop" id="tocBackdrop" onclick="closeTOC()" aria-hidden="true"></div>
-
-  <div class="wrap">
-
-    <!-- Cover (inside cookbook) -->
-    <section class="cover card" id="top">
-      <div class="inner">
-        <div>
-          <h1 class="title">Interactive Cookbook</h1>
-          <div class="gold-rule"></div>
-          <p class="subtitle"></p>
-        </div>
-        <div class="badge">collapsible recipes • print-friendly</div>
-      </div>
-    </section>
-
-    <!-- MAIN CONTENT -->
-    <main class="card">
-
-      <!-- Divider: Desserts -->
-      <section class="divider-page" id="desserts">
-        <h2 class="divider-title">Desserts</h2>
-        <div class="divider-rule"></div>
-        <div class="divider-actions">
-          <a href="#key-lime">Key Lime Cake</a>
-          <a href="#cream-cheese">Cream Cheese Frosting</a>
-          <a href="#red-velvet">Red Velvet Cake</a>
-          <a href="#mississippi-mud">Mississippi Mud Cake</a>
-        </div>
-      </section>
-
-      <!-- Key Lime Cake -->
-      <section class="section" id="key-lime">
-        <h2>Key Lime Cake</h2>
-        <div class="meta">
-          <span class="pill">Dessert</span>
-          <span class="pill">Citrus</span>
-          <span class="pill">Pairs with Lime Cream Cheese Frosting</span>
-        </div>
-      </section>
-
-      <div class="content">
-        <div class="box">
-          <h3>Ingredients</h3>
-          <ul class="checklist" data-group="keylime">
-            <li><input id="kl1" type="checkbox"><label for="kl1">1 cup canola or olive oil</label></li>
-            <li><input id="kl2" type="checkbox"><label for="kl2">3 large eggs</label></li>
-            <li><input id="kl3" type="checkbox"><label for="kl3">1⅓ cups whole milk</label></li>
-            <li><input id="kl4" type="checkbox"><label for="kl4">2 tablespoons fresh lime zest</label></li>
-            <li><input id="kl5" type="checkbox"><label for="kl5">1 tablespoon fresh lime juice</label></li>
-            <li><input id="kl6" type="checkbox"><label for="kl6">2 cups sugar</label></li>
-            <li><input id="kl7" type="checkbox"><label for="kl7">2 cups flour</label></li>
-            <li><input id="kl8" type="checkbox"><label for="kl8">1 teaspoon baking powder</label></li>
-            <li><input id="kl9" type="checkbox"><label for="kl9">½ teaspoon baking soda</label></li>
-            <li><input id="kl10" type="checkbox"><label for="kl10">1 teaspoon salt</label></li>
-            <li><input id="kl11" type="checkbox"><label for="kl11">Fresh limes (optional garnish)</label></li>
-          </ul>
-
-          <div class="controls">
-            <button type="button" onclick="resetGroup('keylime')">Reset checkboxes</button>
-            <button type="button" onclick="printSection('key-lime')">Print this recipe</button>
-          </div>
-        </div>
-
-        <div class="box">
-          <h3>Instructions</h3>
-          <ol class="steps">
-            <li>Preheat oven to 350°F.</li>
-            <li>In a large mixing bowl, combine oil, eggs, whole milk, lime zest, and lime juice. Cream for 2 minutes.</li>
-            <li>In a separate bowl, combine sugar, flour, baking powder, baking soda, and salt.</li>
-            <li>Stir dry ingredients into the egg mixture and fold until just combined.</li>
-            <li>Spray two 9-inch pans (or three 8-inch pans) with nonstick spray. Divide batter evenly.</li>
-            <li>Bake:
+</div>
+</aside>
+<div aria-hidden="true" class="toc-backdrop" id="tocBackdrop" onclick="closeTOC()"></div>
+<div class="wrap">
+<!-- Cover (inside cookbook) -->
+<section class="cover card" id="top">
+<div class="inner">
+<div>
+<h1 class="title">Interactive Cookbook</h1>
+<div class="gold-rule"></div>
+<p class="subtitle"></p>
+</div>
+<div class="badge">collapsible recipes • print-friendly</div>
+</div>
+</section>
+<!-- MAIN CONTENT -->
+<main class="card">
+<!-- Divider: Desserts -->
+<section class="divider-page" id="desserts">
+<h2 class="divider-title">Desserts</h2>
+<div class="divider-rule"></div>
+<div class="divider-actions">
+<a href="#key-lime">Key Lime Cake</a>
+<a href="#cream-cheese">Cream Cheese Frosting</a>
+<a href="#red-velvet">Red Velvet Cake</a>
+<a href="#mississippi-mud">Mississippi Mud Cake</a>
+</div>
+</section>
+<!-- Key Lime Cake -->
+<section class="section" id="key-lime">
+<h2>Key Lime Cake</h2>
+<div class="meta">
+<span class="pill">Dessert</span>
+<span class="pill">Citrus</span>
+<span class="pill">Pairs with Lime Cream Cheese Frosting</span>
+</div>
+</section>
+<div class="content">
+<div class="box">
+<h3>Ingredients</h3>
+<ul class="checklist" data-group="keylime">
+<li><input id="kl1" type="checkbox"/><label for="kl1">1 cup canola or olive oil</label></li>
+<li><input id="kl2" type="checkbox"/><label for="kl2">3 large eggs</label></li>
+<li><input id="kl3" type="checkbox"/><label for="kl3">1⅓ cups whole milk</label></li>
+<li><input id="kl4" type="checkbox"/><label for="kl4">2 tablespoons fresh lime zest</label></li>
+<li><input id="kl5" type="checkbox"/><label for="kl5">1 tablespoon fresh lime juice</label></li>
+<li><input id="kl6" type="checkbox"/><label for="kl6">2 cups sugar</label></li>
+<li><input id="kl7" type="checkbox"/><label for="kl7">2 cups flour</label></li>
+<li><input id="kl8" type="checkbox"/><label for="kl8">1 teaspoon baking powder</label></li>
+<li><input id="kl9" type="checkbox"/><label for="kl9">½ teaspoon baking soda</label></li>
+<li><input id="kl10" type="checkbox"/><label for="kl10">1 teaspoon salt</label></li>
+<li><input id="kl11" type="checkbox"/><label for="kl11">Fresh limes (optional garnish)</label></li>
+</ul>
+<div class="controls">
+<button onclick="resetGroup('keylime')" type="button">Reset checkboxes</button>
+<button onclick="printSection('key-lime')" type="button">Print this recipe</button>
+</div>
+</div>
+<div class="box">
+<h3>Instructions</h3>
+<ol class="steps">
+<li>Preheat oven to 350°F.</li>
+<li>In a large mixing bowl, combine oil, eggs, whole milk, lime zest, and lime juice. Cream for 2 minutes.</li>
+<li>In a separate bowl, combine sugar, flour, baking powder, baking soda, and salt.</li>
+<li>Stir dry ingredients into the egg mixture and fold until just combined.</li>
+<li>Spray two 9-inch pans (or three 8-inch pans) with nonstick spray. Divide batter evenly.</li>
+<li>Bake:
               <ul>
-                <li>Three 8-inch pans: 20–26 minutes (until a toothpick comes out clean).</li>
-                <li>Two 9-inch pans: 30–36 minutes.</li>
-              </ul>
-            </li>
-            <li>Cool completely before frosting.</li>
-          </ol>
-
-          <p class="notes">
+<li>Three 8-inch pans: 20–26 minutes (until a toothpick comes out clean).</li>
+<li>Two 9-inch pans: 30–36 minutes.</li>
+</ul>
+</li>
+<li>Cool completely before frosting.</li>
+</ol>
+<p class="notes">
             Notes: Bake times can vary by pan and oven. Start checking a few minutes early.
           </p>
-
-          <!-- Frosting is nested here to match the other recipes' layout -->
-          <details style="margin-top:12px;">
-            <summary>Lime Cream Cheese Frosting (for Key Lime Cake)</summary>
-            <div class="detail-body">
-              <div class="content" style="padding:0; grid-template-columns:1fr;">
-                <div class="box" style="box-shadow:none;">
-                  <h3>Ingredients</h3>
-                  <ul class="checklist" data-group="limefrost">
-                    <li><input id="lf1" type="checkbox"><label for="lf1">½ cup butter (softened)</label></li>
-                    <li><input id="lf2" type="checkbox"><label for="lf2">8 oz cream cheese (softened)</label></li>
-                    <li><input id="lf3" type="checkbox"><label for="lf3">4 to 4½ cups powdered sugar</label></li>
-                    <li><input id="lf4" type="checkbox"><label for="lf4">1 tablespoon fresh lime juice</label></li>
-                    <li><input id="lf5" type="checkbox"><label for="lf5">½ teaspoon fresh lime zest</label></li>
-                  </ul>
-                </div>
-
-                <div class="box" style="box-shadow:none;">
-                  <h3>Instructions</h3>
-                  <ol class="steps">
-                    <li>Cream butter and cream cheese together for 4–5 minutes until light and fluffy. Scrape sides as needed.</li>
-                    <li>Add powdered sugar gradually, then add lime juice and lime zest.</li>
-                    <li>Beat until smooth and spreadable. Adjust with more sugar (thicker) or a tiny splash of milk (looser), if needed.</li>
-                  </ol>
-
-                  <div class="controls">
-                    <button type="button" onclick="resetGroup('limefrost')">Reset checkboxes</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </details>
-
-        </div>
-      </div>
-
-      <!-- Cream Cheese Frosting -->
-      <section class="section" id="cream-cheese">
-        <h2>Cream Cheese Frosting</h2>
-        <div class="meta">
-          <span class="pill">Frosting</span>
-          <span class="pill">Classic</span>
-          <span class="pill">Pairs well with Red Velvet</span>
-        </div>
-      </section>
-
-      <div class="content">
-        <div class="box">
-          <h3>Ingredients</h3>
-          <ul class="checklist" data-group="ccfrost">
-            <li><input id="cc1" type="checkbox"><label for="cc1">8 oz cream cheese (softened)</label></li>
-            <li><input id="cc2" type="checkbox"><label for="cc2">½ cup unsalted butter (softened)</label></li>
-            <li><input id="cc3" type="checkbox"><label for="cc3">4 cups powdered sugar</label></li>
-            <li><input id="cc4" type="checkbox"><label for="cc4">2 teaspoons vanilla extract</label></li>
-          </ul>
-
-          <div class="controls">
-            <button type="button" onclick="resetGroup('ccfrost')">Reset checkboxes</button>
-            <button type="button" onclick="printSection('cream-cheese')">Print this recipe</button>
-          </div>
-        </div>
-
-        <div class="box">
-          <h3>Instructions</h3>
-          <ol class="steps">
-            <li>Cream butter and cream cheese until smooth and fluffy.</li>
-            <li>Add powdered sugar gradually, beating until smooth.</li>
-            <li>Mix in vanilla extract.</li>
-            <li>Use immediately or refrigerate and re-whip before spreading.</li>
-          </ol>
-          <p class="notes">Notes: If frosting is too soft, chill 10–15 minutes. If too thick, add 1–2 teaspoons milk.</p>
-        </div>
-      </div>
-
-      <!-- Red Velvet Cake -->
-      <section class="section" id="red-velvet">
-        <h2>Red Velvet Cake (Heritage Recipe)</h2>
-        <div class="meta">
-          <span class="pill">Dessert</span>
-          <span class="pill">Handwritten original</span>
-          <span class="pill">Bake 350°F</span>
-        </div>
-      </section>
-
-      <div class="content">
-        <div class="box">
-          <h3>Ingredients</h3>
-          <ul class="checklist" data-group="redvelvet">
-            <li><input id="rv1" type="checkbox"><label for="rv1">2 cups sugar</label></li>
-            <li><input id="rv2" type="checkbox"><label for="rv2">3 eggs</label></li>
-            <li><input id="rv3" type="checkbox"><label for="rv3">1 tablespoon vinegar</label></li>
-            <li><input id="rv4" type="checkbox"><label for="rv4">1 teaspoon cocoa</label></li>
-            <li><input id="rv5" type="checkbox"><label for="rv5">2 (1 oz) bottles red food coloring</label></li>
-            <li><input id="rv6" type="checkbox"><label for="rv6">1 teaspoon vanilla</label></li>
-            <li><input id="rv7" type="checkbox"><label for="rv7">2½ cups plain flour</label></li>
-            <li><input id="rv8" type="checkbox"><label for="rv8">1 cup buttermilk</label></li>
-            <li><input id="rv9" type="checkbox"><label for="rv9">½ cup butter</label></li>
-            <li><input id="rv10" type="checkbox"><label for="rv10">1 teaspoon salt</label></li>
-            <li><input id="rv11" type="checkbox"><label for="rv11">½ teaspoon baking powder</label></li>
-            <li><input id="rv12" type="checkbox"><label for="rv12">1½ teaspoons baking soda</label></li>
-          </ul>
-
-          <div class="controls">
-            <button type="button" onclick="resetGroup('redvelvet')">Reset checkboxes</button>
-            <button type="button" onclick="printSection('red-velvet')">Print this recipe</button>
-          </div>
-        </div>
-
-        <div class="box">
-          <h3>Instructions</h3>
-          <ol class="steps">
-            <li>Cream sugar and butter.</li>
-            <li>Add eggs one at a time.</li>
-            <li>Make a paste with vinegar, cocoa, and food coloring; add to the creamed mixture.</li>
-            <li>Add flour and buttermilk alternately.</li>
-            <li>Add vanilla.</li>
-            <li>Pour into 3-layer pans or a sheet pan (makes 3 layers).</li>
-            <li>Bake at 350°F for 25–30 minutes. Cool completely.</li>
-            <li>Frost with cream cheese frosting.</li>
-          </ol>
-
-          <p class="notes">
+<!-- Frosting is nested here to match the other recipes' layout -->
+<details style="margin-top:12px;">
+<summary>Lime Cream Cheese Frosting (for Key Lime Cake)</summary>
+<div class="detail-body">
+<div class="content" style="padding:0; grid-template-columns:1fr;">
+<div class="box" style="box-shadow:none;">
+<h3>Ingredients</h3>
+<ul class="checklist" data-group="limefrost">
+<li><input id="lf1" type="checkbox"/><label for="lf1">½ cup butter (softened)</label></li>
+<li><input id="lf2" type="checkbox"/><label for="lf2">8 oz cream cheese (softened)</label></li>
+<li><input id="lf3" type="checkbox"/><label for="lf3">4 to 4½ cups powdered sugar</label></li>
+<li><input id="lf4" type="checkbox"/><label for="lf4">1 tablespoon fresh lime juice</label></li>
+<li><input id="lf5" type="checkbox"/><label for="lf5">½ teaspoon fresh lime zest</label></li>
+</ul>
+</div>
+<div class="box" style="box-shadow:none;">
+<h3>Instructions</h3>
+<ol class="steps">
+<li>Cream butter and cream cheese together for 4–5 minutes until light and fluffy. Scrape sides as needed.</li>
+<li>Add powdered sugar gradually, then add lime juice and lime zest.</li>
+<li>Beat until smooth and spreadable. Adjust with more sugar (thicker) or a tiny splash of milk (looser), if needed.</li>
+</ol>
+<div class="controls">
+<button onclick="resetGroup('limefrost')" type="button">Reset checkboxes</button>
+</div>
+</div>
+</div>
+</div>
+</details>
+</div>
+</div>
+<!-- Cream Cheese Frosting -->
+<section class="section" id="cream-cheese">
+<h2>Cream Cheese Frosting</h2>
+<div class="meta">
+<span class="pill">Frosting</span>
+<span class="pill">Classic</span>
+<span class="pill">Pairs well with Red Velvet</span>
+</div>
+</section>
+<div class="content">
+<div class="box">
+<h3>Ingredients</h3>
+<ul class="checklist" data-group="ccfrost">
+<li><input id="cc1" type="checkbox"/><label for="cc1">8 oz cream cheese (softened)</label></li>
+<li><input id="cc2" type="checkbox"/><label for="cc2">½ cup unsalted butter (softened)</label></li>
+<li><input id="cc3" type="checkbox"/><label for="cc3">4 cups powdered sugar</label></li>
+<li><input id="cc4" type="checkbox"/><label for="cc4">2 teaspoons vanilla extract</label></li>
+</ul>
+<div class="controls">
+<button onclick="resetGroup('ccfrost')" type="button">Reset checkboxes</button>
+<button onclick="printSection('cream-cheese')" type="button">Print this recipe</button>
+</div>
+</div>
+<div class="box">
+<h3>Instructions</h3>
+<ol class="steps">
+<li>Cream butter and cream cheese until smooth and fluffy.</li>
+<li>Add powdered sugar gradually, beating until smooth.</li>
+<li>Mix in vanilla extract.</li>
+<li>Use immediately or refrigerate and re-whip before spreading.</li>
+</ol>
+<p class="notes">Notes: If frosting is too soft, chill 10–15 minutes. If too thick, add 1–2 teaspoons milk.</p>
+</div>
+</div>
+<!-- Red Velvet Cake -->
+<section class="section" id="red-velvet">
+<h2>Red Velvet Cake (Heritage Recipe)</h2>
+<div class="meta">
+<span class="pill">Dessert</span>
+<span class="pill">Handwritten original</span>
+<span class="pill">Bake 350°F</span>
+</div>
+</section>
+<div class="content">
+<div class="box">
+<h3>Ingredients</h3>
+<ul class="checklist" data-group="redvelvet">
+<li><input id="rv1" type="checkbox"/><label for="rv1">2 cups sugar</label></li>
+<li><input id="rv2" type="checkbox"/><label for="rv2">3 eggs</label></li>
+<li><input id="rv3" type="checkbox"/><label for="rv3">1 tablespoon vinegar</label></li>
+<li><input id="rv4" type="checkbox"/><label for="rv4">1 teaspoon cocoa</label></li>
+<li><input id="rv5" type="checkbox"/><label for="rv5">2 (1 oz) bottles red food coloring</label></li>
+<li><input id="rv6" type="checkbox"/><label for="rv6">1 teaspoon vanilla</label></li>
+<li><input id="rv7" type="checkbox"/><label for="rv7">2½ cups plain flour</label></li>
+<li><input id="rv8" type="checkbox"/><label for="rv8">1 cup buttermilk</label></li>
+<li><input id="rv9" type="checkbox"/><label for="rv9">½ cup butter</label></li>
+<li><input id="rv10" type="checkbox"/><label for="rv10">1 teaspoon salt</label></li>
+<li><input id="rv11" type="checkbox"/><label for="rv11">½ teaspoon baking powder</label></li>
+<li><input id="rv12" type="checkbox"/><label for="rv12">1½ teaspoons baking soda</label></li>
+</ul>
+<div class="controls">
+<button onclick="resetGroup('redvelvet')" type="button">Reset checkboxes</button>
+<button onclick="printSection('red-velvet')" type="button">Print this recipe</button>
+</div>
+</div>
+<div class="box">
+<h3>Instructions</h3>
+<ol class="steps">
+<li>Cream sugar and butter.</li>
+<li>Add eggs one at a time.</li>
+<li>Make a paste with vinegar, cocoa, and food coloring; add to the creamed mixture.</li>
+<li>Add flour and buttermilk alternately.</li>
+<li>Add vanilla.</li>
+<li>Pour into 3-layer pans or a sheet pan (makes 3 layers).</li>
+<li>Bake at 350°F for 25–30 minutes. Cool completely.</li>
+<li>Frost with cream cheese frosting.</li>
+</ol>
+<p class="notes">
             Notes: This recipe is transcribed directly from your handwritten card.
           </p>
-        </div>
-      </div>
-
-      <!-- Mississippi Mud Cake -->
-      <section class="section" id="mississippi-mud">
-        <h2>Mississippi Mud Cake</h2>
-        <div class="meta">
-          <span class="pill">Dessert</span>
-          <span class="pill">Chocolate</span>
-          <span class="pill">Marshmallow topping</span>
-        </div>
-      </section>
-
-      <div class="content">
-        <div class="box">
-          <h3>Cake Ingredients</h3>
-          <ul class="checklist" data-group="mudcake">
-            <li><input id="mm1" type="checkbox"><label for="mm1">2 cups sugar</label></li>
-            <li><input id="mm2" type="checkbox"><label for="mm2">4 eggs</label></li>
-            <li><input id="mm3" type="checkbox"><label for="mm3">¾ cup self-rising flour</label></li>
-            <li><input id="mm4" type="checkbox"><label for="mm4">2 sticks melted butter</label></li>
-            <li><input id="mm5" type="checkbox"><label for="mm5">2 teaspoons vanilla</label></li>
-            <li><input id="mm6" type="checkbox"><label for="mm6">1 cup pecans</label></li>
-            <li><input id="mm7" type="checkbox"><label for="mm7">⅓ cup cocoa</label></li>
-            <li><input id="mm8" type="checkbox"><label for="mm8">Mini marshmallows or marshmallow creme (for topping)</label></li>
-          </ul>
-
-          <div class="controls">
-            <button type="button" onclick="resetGroup('mudcake')">Reset checkboxes</button>
-            <button type="button" onclick="printSection('mississippi-mud')">Print this recipe</button>
-          </div>
-        </div>
-
-        <div class="box">
-          <h3>Instructions</h3>
-          <ol class="steps">
-            <li>Mix cake ingredients together until combined.</li>
-            <li>Bake for about 25 minutes (time and pan size can vary).</li>
-            <li>While hot, put mini marshmallows (or marshmallow creme) on top.</li>
-            <li>Spread chocolate icing over the marshmallow layer.</li>
-          </ol>
-
-          <details style="margin-top:12px;">
-            <summary>Chocolate Icing (for Mississippi Mud Cake)</summary>
-            <div class="detail-body">
-              <ul class="checklist" data-group="mudicing">
-                <li><input id="mi1" type="checkbox"><label for="mi1">1 stick butter</label></li>
-                <li><input id="mi2" type="checkbox"><label for="mi2">2 cups powdered sugar</label></li>
-                <li><input id="mi3" type="checkbox"><label for="mi3">¼ cup cocoa</label></li>
-                <li><input id="mi4" type="checkbox"><label for="mi4">1 teaspoon vanilla</label></li>
-              </ul>
-              <p class="notes" style="margin-top:10px;">
+</div>
+</div>
+<!-- Mississippi Mud Cake -->
+<section class="section" id="mississippi-mud">
+<h2>Mississippi Mud Cake</h2>
+<div class="meta">
+<span class="pill">Dessert</span>
+<span class="pill">Chocolate</span>
+<span class="pill">Marshmallow topping</span>
+</div>
+</section>
+<div class="content">
+<div class="box">
+<h3>Cake Ingredients</h3>
+<ul class="checklist" data-group="mudcake">
+<li><input id="mm1" type="checkbox"/><label for="mm1">2 cups sugar</label></li>
+<li><input id="mm2" type="checkbox"/><label for="mm2">4 eggs</label></li>
+<li><input id="mm3" type="checkbox"/><label for="mm3">¾ cup self-rising flour</label></li>
+<li><input id="mm4" type="checkbox"/><label for="mm4">2 sticks melted butter</label></li>
+<li><input id="mm5" type="checkbox"/><label for="mm5">2 teaspoons vanilla</label></li>
+<li><input id="mm6" type="checkbox"/><label for="mm6">1 cup pecans</label></li>
+<li><input id="mm7" type="checkbox"/><label for="mm7">⅓ cup cocoa</label></li>
+<li><input id="mm8" type="checkbox"/><label for="mm8">Mini marshmallows or marshmallow creme (for topping)</label></li>
+</ul>
+<div class="controls">
+<button onclick="resetGroup('mudcake')" type="button">Reset checkboxes</button>
+<button onclick="printSection('mississippi-mud')" type="button">Print this recipe</button>
+</div>
+</div>
+<div class="box">
+<h3>Instructions</h3>
+<ol class="steps">
+<li>Mix cake ingredients together until combined.</li>
+<li>Bake for about 25 minutes (time and pan size can vary).</li>
+<li>While hot, put mini marshmallows (or marshmallow creme) on top.</li>
+<li>Spread chocolate icing over the marshmallow layer.</li>
+</ol>
+<details style="margin-top:12px;">
+<summary>Chocolate Icing (for Mississippi Mud Cake)</summary>
+<div class="detail-body">
+<ul class="checklist" data-group="mudicing">
+<li><input id="mi1" type="checkbox"/><label for="mi1">1 stick butter</label></li>
+<li><input id="mi2" type="checkbox"/><label for="mi2">2 cups powdered sugar</label></li>
+<li><input id="mi3" type="checkbox"/><label for="mi3">¼ cup cocoa</label></li>
+<li><input id="mi4" type="checkbox"/><label for="mi4">1 teaspoon vanilla</label></li>
+</ul>
+<p class="notes" style="margin-top:10px;">
                 Notes: Mix until smooth and spread over the marshmallow layer while the cake is still warm.
               </p>
-              <div class="controls">
-                <button type="button" onclick="resetGroup('mudicing')">Reset checkboxes</button>
-              </div>
-            </div>
-          </details>
-        </div>
-      </div>
-
-      <!-- Divider: Savory -->
-      <section class="divider-page" id="savory">
-        <h2 class="divider-title">Savory</h2>
-        <div class="divider-rule"></div>
-        <div class="divider-actions">
-          <a href="#texas-chowchow">Texas Chow Chow</a>
-          <a href="#collard-greens">Instant Pot Collard Greens</a>
-        </div>
-      </section>
-
-      <!-- Texas Chow Chow -->
-      <section class="section" id="texas-chowchow">
-        <h2>Texas Chow Chow</h2>
-        <div class="meta">
-          <span class="pill">Condiment</span>
-          <span class="pill">Heritage</span>
-          <span class="pill">Batch recipe</span>
-        </div>
-      </section>
-
-      <div class="content">
-        <div class="box">
-          <h3>Ingredients (as written)</h3>
-          <ul class="checklist" data-group="chowchow">
-            <li><input id="tc1" type="checkbox"><label for="tc1">6½ lbs green tomatoes (about 1 gallon chopped)</label></li>
-            <li><input id="tc2" type="checkbox"><label for="tc2">6 lbs onions</label></li>
-            <li><input id="tc3" type="checkbox"><label for="tc3">10 lbs cabbage</label></li>
-            <li><input id="tc4" type="checkbox"><label for="tc4">¼ lb hot peppers (mixed red &amp; green)</label></li>
-            <li><input id="tc5" type="checkbox"><label for="tc5">4 bell peppers (2 red, 2 green)</label></li>
-            <li><input id="tc6" type="checkbox"><label for="tc6">10 lbs sugar</label></li>
-            <li><input id="tc7" type="checkbox"><label for="tc7">3 quarts apple cider vinegar</label></li>
-          </ul>
-
-          <div class="controls">
-            <button type="button" onclick="resetGroup('chowchow')">Reset checkboxes</button>
-            <button type="button" onclick="printSection('texas-chowchow')">Print this recipe</button>
-          </div>
-        </div>
-
-        <div class="box">
-          <h3>Directions (heritage-style)</h3>
-          <ol class="steps">
-            <li>Chop tomatoes, onions, peppers, and cabbage.</li>
-            <li>Sprinkle lightly with salt and refrigerate overnight.</li>
-            <li>Drain excess liquid the next day.</li>
-            <li>Cook with sugar and apple cider vinegar until the mixture is tender and the liquid reduces to your preferred consistency.</li>
-            <li>Jar using proper canning practices, or refrigerate for short-term use.</li>
-          </ol>
-
-          <p class="notes">
+<div class="controls">
+<button onclick="resetGroup('mudicing')" type="button">Reset checkboxes</button>
+</div>
+</div>
+</details>
+</div>
+</div>
+<!-- Divider: Savory -->
+<section class="divider-page" id="savory">
+<h2 class="divider-title">Savory</h2>
+<div class="divider-rule"></div>
+<div class="divider-actions">
+<a href="#texas-chowchow">Texas Chow Chow</a>
+<a href="#collard-greens">Instant Pot Collard Greens</a>
+</div>
+</section>
+<!-- Texas Chow Chow -->
+<section class="section" id="texas-chowchow">
+<h2>Texas Chow Chow</h2>
+<div class="meta">
+<span class="pill">Condiment</span>
+<span class="pill">Heritage</span>
+<span class="pill">Batch recipe</span>
+</div>
+</section>
+<div class="content">
+<div class="box">
+<h3>Ingredients (as written)</h3>
+<ul class="checklist" data-group="chowchow">
+<li><input id="tc1" type="checkbox"/><label for="tc1">6½ lbs green tomatoes (about 1 gallon chopped)</label></li>
+<li><input id="tc2" type="checkbox"/><label for="tc2">6 lbs onions</label></li>
+<li><input id="tc3" type="checkbox"/><label for="tc3">10 lbs cabbage</label></li>
+<li><input id="tc4" type="checkbox"/><label for="tc4">¼ lb hot peppers (mixed red &amp; green)</label></li>
+<li><input id="tc5" type="checkbox"/><label for="tc5">4 bell peppers (2 red, 2 green)</label></li>
+<li><input id="tc6" type="checkbox"/><label for="tc6">10 lbs sugar</label></li>
+<li><input id="tc7" type="checkbox"/><label for="tc7">3 quarts apple cider vinegar</label></li>
+</ul>
+<div class="controls">
+<button onclick="resetGroup('chowchow')" type="button">Reset checkboxes</button>
+<button onclick="printSection('texas-chowchow')" type="button">Print this recipe</button>
+</div>
+</div>
+<div class="box">
+<h3>Directions (heritage-style)</h3>
+<ol class="steps">
+<li>Chop tomatoes, onions, peppers, and cabbage.</li>
+<li>Sprinkle lightly with salt and refrigerate overnight.</li>
+<li>Drain excess liquid the next day.</li>
+<li>Cook with sugar and apple cider vinegar until the mixture is tender and the liquid reduces to your preferred consistency.</li>
+<li>Jar using proper canning practices, or refrigerate for short-term use.</li>
+</ol>
+<p class="notes">
             Notes: The handwritten instructions are partially abbreviated.
           </p>
-        </div>
-      </div>
-
-      <!-- Instant Pot Southern Collard Greens -->
-      <section class="section" id="collard-greens">
-        <h2>Instant Pot Southern Collard Greens</h2>
-        <div class="meta">
-          <span class="pill">Savory</span>
-          <span class="pill">Instant Pot</span>
-          <span class="pill">25 minutes (High Pressure)</span>
-        </div>
-      </section>
-
-      <div class="content">
-        <div class="box">
-          <h3>Ingredients</h3>
-          <ul class="checklist" data-group="collards">
-            <li><input id="cg1" type="checkbox"><label for="cg1">1 tablespoon olive oil</label></li>
-            <li><input id="cg2" type="checkbox"><label for="cg2">1 cup chopped white onion</label></li>
-            <li><input id="cg3" type="checkbox"><label for="cg3">2 garlic cloves, minced</label></li>
-            <li><input id="cg4" type="checkbox"><label for="cg4">1 pound collard greens, trimmed and washed (pre-washed ok)</label></li>
-            <li><input id="cg5" type="checkbox"><label for="cg5">Optional: mix greens (often ¾ collards + ¼ mustard greens)</label></li>
-            <li><input id="cg6" type="checkbox"><label for="cg6">1 smoked turkey leg or turkey wing (about 1 to 1½ pounds), fully cooked (or ham hocks)</label></li>
-            <li><input id="cg7" type="checkbox"><label for="cg7">1½ cups chicken broth</label></li>
-            <li><input id="cg8" type="checkbox"><label for="cg8">½ tablespoon Creole seasoning</label></li>
-          </ul>
-
-          <div class="controls">
-            <button type="button" onclick="resetGroup('collards')">Reset checkboxes</button>
-            <button type="button" onclick="printSection('collard-greens')">Print this recipe</button>
-          </div>
-        </div>
-
-        <div class="box">
-          <h3>Instructions</h3>
-          <ol class="steps">
-            <li>Place the Instant Pot on the Sauté function. Add olive oil and onions.</li>
-            <li>Cook 2–3 minutes until translucent and fragrant.</li>
-            <li>Add garlic and stir.</li>
-            <li>Add half of the collard greens to the pot. Layer in the turkey leg, then add remaining greens.</li>
-            <li>Add chicken broth and Creole seasoning.</li>
-            <li>Place lid on and seal.</li>
-            <li>Cook for 25 minutes on Manual &gt; High Pressure.</li>
-            <li>When finished, quick release the steam.</li>
-            <li>Open, remove turkey, shred meat from the bone, return meat to the pot. Stir and serve.</li>
-          </ol>
-        </div>
-      </div>
-
-      <!-- Source + End -->
-      <section class="section" id="source">
-        <h2>Source Notes</h2>
-      </section>
-
-      <div class="content" style="margin-bottom:0;">
-        <div class="box" style="grid-column:1/-1;">
-          <p class="notes" style="margin:0;">
+</div>
+</div>
+<!-- Instant Pot Southern Collard Greens -->
+<section class="section" id="collard-greens">
+<h2>Instant Pot Southern Collard Greens</h2>
+<div class="meta">
+<span class="pill">Savory</span>
+<span class="pill">Instant Pot</span>
+<span class="pill">25 minutes (High Pressure)</span>
+</div>
+</section>
+<div class="content">
+<div class="box">
+<h3>Ingredients</h3>
+<ul class="checklist" data-group="collards">
+<li><input id="cg1" type="checkbox"/><label for="cg1">1 tablespoon olive oil</label></li>
+<li><input id="cg2" type="checkbox"/><label for="cg2">1 cup chopped white onion</label></li>
+<li><input id="cg3" type="checkbox"/><label for="cg3">2 garlic cloves, minced</label></li>
+<li><input id="cg4" type="checkbox"/><label for="cg4">1 pound collard greens, trimmed and washed (pre-washed ok)</label></li>
+<li><input id="cg5" type="checkbox"/><label for="cg5">Optional: mix greens (often ¾ collards + ¼ mustard greens)</label></li>
+<li><input id="cg6" type="checkbox"/><label for="cg6">1 smoked turkey leg or turkey wing (about 1 to 1½ pounds), fully cooked (or ham hocks)</label></li>
+<li><input id="cg7" type="checkbox"/><label for="cg7">1½ cups chicken broth</label></li>
+<li><input id="cg8" type="checkbox"/><label for="cg8">½ tablespoon Creole seasoning</label></li>
+</ul>
+<div class="controls">
+<button onclick="resetGroup('collards')" type="button">Reset checkboxes</button>
+<button onclick="printSection('collard-greens')" type="button">Print this recipe</button>
+</div>
+</div>
+<div class="box">
+<h3>Instructions</h3>
+<ol class="steps">
+<li>Place the Instant Pot on the Sauté function. Add olive oil and onions.</li>
+<li>Cook 2–3 minutes until translucent and fragrant.</li>
+<li>Add garlic and stir.</li>
+<li>Add half of the collard greens to the pot. Layer in the turkey leg, then add remaining greens.</li>
+<li>Add chicken broth and Creole seasoning.</li>
+<li>Place lid on and seal.</li>
+<li>Cook for 25 minutes on Manual &gt; High Pressure.</li>
+<li>When finished, quick release the steam.</li>
+<li>Open, remove turkey, shred meat from the bone, return meat to the pot. Stir and serve.</li>
+</ol>
+</div>
+</div>
+<!-- Source + End -->
+<div id="dynamic-recipes"></div><section class="section" id="source">
+<h2>Source Notes</h2>
+</section>
+<div class="content" style="margin-bottom:0;">
+<div class="box" style="grid-column:1/-1;">
+<p class="notes" style="margin:0;">
             All recipes above were transcribed from handwritten and typed pages.
           </p>
-          <div class="controls">
-            <button type="button" onclick="window.location.href='#top'">Back to top</button>
-          </div>
-        </div>
-      </div>
-<div id="dynamic-recipes"></div>
-
-    </main>
-
-    <div class="footer">
+<div class="controls">
+<button onclick="window.location.href='#top'" type="button">Back to top</button>
+</div>
+</div>
+</div>
+</main>
+<div class="footer">
       Interactive checklists • Print-friendly layout •
-      <a href="#" onclick="showCover(); return false;" class="show-cover">Show cover</a>
-    </div>
-  </div>
-
-  <script>
+      <a class="show-cover" href="#" onclick="showCover(); return false;">Show cover</a>
+</div>
+</div>
+<script>
     // Reset all checkboxes within a named group
     function resetGroup(groupName){
       const group = document.querySelectorAll('[data-group="' + groupName + '"] input[type="checkbox"]');
@@ -1132,5 +1032,45 @@ fetch(sheetURL)
       } catch(e){}
     })();
   </script>
-</body>
+<script>
+const sheetURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSPn0KHuAKxZC2aeYt1DdqLWqNzvrcx5AJbovOGqdzXXuOjFuAzQaR3uCRgtIdfb1a1RX26TPUO6bL8/pub?output=tsv';
+
+fetch(sheetURL)
+  .then(res => res.text())
+  .then(data => {
+    const lines = data.trim().split('\n');
+    const headers = lines[0].split('\t');
+    const recipes = lines.slice(1).map(row => {
+      const values = row.split('\t');
+      const obj = {};
+      headers.forEach((key, i) => obj[key.trim()] = values[i]?.trim());
+      return obj;
+    });
+
+    const grouped = {};
+    recipes.forEach(recipe => {
+      const category = recipe.Category || "Uncategorized";
+      if (!grouped[category]) grouped[category] = [];
+      grouped[category].push(recipe);
+    });
+
+    let output = "";
+    for (const [category, items] of Object.entries(grouped)) {
+      output += `<section class="recipe-section"><h2 class="recipe-heading">${category}</h2>`;
+      for (const r of items) {
+        output += `
+          <article class="recipe-card">
+            <h3>${r.Title || "Untitled"}</h3>
+            <p><strong>Ingredients:</strong> ${r.Ingredients}</p>
+            <p><strong>Steps:</strong> ${r.Steps}</p>
+            <p><strong>Notes:</strong> ${r.Notes || ""}</p>
+          </article>
+        `;
+      }
+      output += "</section>";
+    }
+
+    document.getElementById("dynamic-recipes").innerHTML = output;
+  });
+</script></body>
 </html>
