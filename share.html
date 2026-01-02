@@ -25,7 +25,7 @@
         radial-gradient(900px 520px at 88% 12%, rgba(26,47,35,.10), transparent 58%),
         linear-gradient(180deg, #fff, #fbf7f5);
     }
-    .wrap{ max-width:920px; margin:0 auto; padding:22px 16px 60px; }
+    .wrap{ max-width:1080px; margin:0 auto; padding:22px 16px 60px; }
     .card{
       background:var(--paper);
       border-radius:26px;
@@ -42,7 +42,7 @@
     p{ margin:10px 0 0; color:rgba(42,36,34,.78); font-size:14px; }
 
     .grid{ display:grid; grid-template-columns: 1fr 1fr; gap:14px; padding:16px 18px 18px; }
-    @media (max-width: 880px){ .grid{ grid-template-columns:1fr; } }
+    @media (max-width: 920px){ .grid{ grid-template-columns:1fr; } }
 
     .box{
       border:1px solid rgba(142,113,88,.20);
@@ -52,16 +52,25 @@
       padding:14px;
     }
     .box h2{ margin:0 0 10px; font-family:var(--serif); font-size:16px; }
-    label{ display:block; font-size:12px; color:rgba(42,36,34,.72); margin:10px 0 6px; }
-    input[type="text"], textarea{
+    label{ display:block; font-size:12px; color:rgba(42,36,34,.72); margin:10px 0 6px; font-weight:500; }
+    label .required{ color:#d64545; }
+    label .hint{ font-weight:400; font-size:11px; color:rgba(42,36,34,.58); }
+    
+    input[type="text"], textarea, select{
       width:100%;
       border-radius:14px;
       border:1px solid rgba(142,113,88,.22);
       padding:10px 11px;
       font-size:14px;
       outline:none;
+      font-family:var(--sans);
+    }
+    select{
+      background:white;
+      cursor:pointer;
     }
     textarea{ min-height:120px; resize:vertical; }
+    textarea.short{ min-height:70px; }
 
     .actions{ display:flex; flex-wrap:wrap; gap:10px; margin-top:12px; }
     button{
@@ -75,6 +84,11 @@
       transition: transform .08s ease;
     }
     button:hover{ transform: translateY(-1px); }
+    button:disabled{
+      opacity:0.5;
+      cursor:not-allowed;
+      transform:none !important;
+    }
     button.primary{
       background: linear-gradient(180deg, rgba(26,47,35,.96), rgba(26,47,35,.90));
       border-color: rgba(26,47,35,.55);
@@ -83,7 +97,7 @@
     button.secondary{
       background: linear-gradient(180deg, rgba(142,113,88,.22), rgba(255,255,255,.95));
     }
-    .muted{ font-size:12px; color:rgba(42,36,34,.72); margin-top:10px; }
+    .muted{ font-size:12px; color:rgba(42,36,34,.72); margin-top:10px; line-height:1.4; }
     .status{
       margin-top:10px;
       font-size:12px;
@@ -121,6 +135,16 @@
       color:rgba(42,36,34,.72);
       line-height:1.4;
     }
+    .infoBox{
+      background:rgba(225,182,182,.12);
+      border:1px solid rgba(142,113,88,.18);
+      border-radius:14px;
+      padding:12px;
+      margin-top:12px;
+      font-size:12px;
+      line-height:1.5;
+    }
+    .infoBox strong{ color:var(--accent); }
   </style>
 
   <!-- Tesseract.js (browser OCR) -->
@@ -132,16 +156,16 @@
     <div class="card">
       <header>
         <h1>Share a Recipe</h1>
-        <p>Upload a typed recipe card photo, extract the text, then send it into the Family & Friends Cookbook form.</p>
+        <p>Upload a recipe photo, extract text with OCR, fill in the details, and submit to the Family Cookbook.</p>
       </header>
 
       <div class="grid">
 
         <!-- LEFT: Upload + OCR -->
         <div class="box">
-          <h2>1) Upload recipe photo</h2>
+          <h2>1) Upload Recipe Photo (Optional)</h2>
 
-          <label>Recipe photo (typed card works best)</label>
+          <label>Recipe photo (typed cards work best)</label>
           <input id="photoInput" type="file" accept="image/*" />
 
           <div class="preview" style="margin-top:12px;">
@@ -151,7 +175,7 @@
 
             <div class="actions">
               <button type="button" class="secondary" id="btnExtract" disabled>Extract Text (OCR)</button>
-              <button type="button" id="btnClear" disabled>Clear</button>
+              <button type="button" id="btnClear" disabled>Clear Photo</button>
             </div>
 
             <div class="status" id="status" style="display:none;">
@@ -160,29 +184,76 @@
             </div>
 
             <div class="smallNote">
-              Tip: crop tight around the recipe text before uploading for the cleanest results.
+              <strong>Tip:</strong> Crop tight around the recipe text before uploading for best OCR results. You can also skip the photo and type directly into the form.
             </div>
           </div>
         </div>
 
-        <!-- RIGHT: Results + Send -->
+        <!-- RIGHT: Recipe Details -->
         <div class="box">
-          <h2>2) Review & send to Google Form</h2>
+          <h2>2) Recipe Details</h2>
 
-          <label>Ingredients (auto-filled)</label>
-          <textarea id="ingredientsBox" placeholder="OCR will try to place ingredients here…"></textarea>
+          <label>Recipe Title <span class="required">*</span></label>
+          <input id="titleBox" type="text" placeholder="e.g., Grandma's Peach Cobbler" required />
 
-          <label>Steps (auto-filled)</label>
-          <textarea id="stepsBox" placeholder="OCR will try to place steps here…"></textarea>
+          <label>Category <span class="required">*</span></label>
+          <select id="categoryBox" required>
+            <option value="">-- Select Category --</option>
+            <option value="Breakfast">Breakfast</option>
+            <option value="Main Course">Main Course</option>
+            <option value="Side Dish">Side Dish</option>
+            <option value="Dessert">Dessert</option>
+            <option value="Appetizer">Appetizer</option>
+            <option value="Salad">Salad</option>
+            <option value="Soup">Soup</option>
+            <option value="Beverage">Beverage</option>
+            <option value="Preserved">Preserved</option>
+            <option value="Sauce/Condiment">Sauce/Condiment</option>
+            <option value="Other">Other</option>
+          </select>
 
-          <label>Notes (optional)</label>
-          <input id="notesBox" type="text" placeholder="Example: 'Aunt Linda’s card from 1998'"/>
+          <label>Tags <span class="hint">(separate with | pipe character)</span></label>
+          <input id="tagsBox" type="text" placeholder="e.g., Quick|Easy|Family Favorite" />
+
+          <label>Cooking Time/Temperature</label>
+          <input id="timeBox" type="text" placeholder="e.g., Bake 350°F, 30 min" />
+        </div>
+
+      </div>
+
+      <!-- Full Width Sections -->
+      <div style="padding:0 18px 18px;">
+        
+        <div class="box" style="margin-bottom:14px;">
+          <h2>3) Ingredients <span class="required">*</span></h2>
+          <div class="infoBox">
+            <strong>Format:</strong> Put each ingredient on a separate line, OR separate with the <strong>|</strong> (pipe) character.
+            <br><strong>Example:</strong> 2 cups flour|1 cup sugar|3 eggs
+          </div>
+          <textarea id="ingredientsBox" placeholder="2 cups flour|1 cup sugar|3 eggs|1 tsp vanilla" required></textarea>
+        </div>
+
+        <div class="box" style="margin-bottom:14px;">
+          <h2>4) Directions <span class="required">*</span></h2>
+          <div class="infoBox">
+            <strong>Format:</strong> Put each step on a separate line, OR separate with the <strong>|</strong> (pipe) character.
+            <br><strong>Example:</strong> Preheat oven to 350°F|Mix dry ingredients|Add wet ingredients|Bake 30 minutes
+          </div>
+          <textarea id="stepsBox" placeholder="Preheat oven to 350°F|Mix ingredients|Pour into pan|Bake 30 minutes" required></textarea>
+        </div>
+
+        <div class="box">
+          <h2>5) Notes (Optional)</h2>
+          <label>Additional notes, source, or tips</label>
+          <textarea id="notesBox" class="short" placeholder="Example: 'From Aunt Linda's card, 1998' or 'Serve warm with ice cream'"></textarea>
 
           <div class="actions">
-            <button type="button" class="primary" id="btnGoForm" disabled>Continue to Google Form</button>
+            <button type="button" class="primary" id="btnSubmit">Submit to Cookbook</button>
+            <button type="button" id="btnReset">Reset Form</button>
           </div>
+          
           <div class="muted">
-            You can edit the text before submitting. The photo stays the “source of truth.”
+            Required fields are marked with <span style="color:#d64545;">*</span>. Once you submit, the recipe will be added to the family cookbook within a few minutes!
           </div>
         </div>
 
@@ -191,23 +262,25 @@
   </div>
 
   <script>
-    // === CONFIG: Put your Google Form base URL here ===
-    const FORM_BASE =
-      "https://docs.google.com/forms/d/e/1FAIpQLSdhYWTAHVid0Ec4kLCKRh2ZrHegYB8VjefEqBCLPx3VRFfEGw/viewform";
-
-    // === CONFIG: Put your Google Form *prefill* entry IDs here ===
-    // You ALREADY have Photo URL: entry.1845959569 (keep it)
-    // Replace the ??? with the correct IDs for Ingredients + Steps.
-    const ENTRY_TITLE = "entry.1770944788";
-    const ENTRY_ING   = "entry.991892970";
-    const ENTRY_STEPS = "entry.1029695301";
-    const ENTRY_PHOTO = "entry.1845959569";
-
+    // === CONFIG: Put your Google Form base URL and entry IDs here ===
+    const FORM_BASE = "https://docs.google.com/forms/d/e/1FAIpQLSdhYWTAHVid0Ec4kLCKRh2ZrHegYB8VjefEqBCLPx3VRFfEGw/viewform";
     
+    // Entry IDs from your Google Form (get these by inspecting the form)
+    const ENTRY_TITLE = "entry.1770944788";      // Recipe Title
+    const ENTRY_CATEGORY = "entry.YOUR_ID_HERE";  // Category (you'll need to add this)
+    const ENTRY_TAGS = "entry.YOUR_ID_HERE";      // Tags (you'll need to add this)
+    const ENTRY_TIME = "entry.YOUR_ID_HERE";      // Time (you'll need to add this)
+    const ENTRY_ING = "entry.991892970";          // Ingredients
+    const ENTRY_STEPS = "entry.1029695301";       // Steps/Directions
+    const ENTRY_NOTES = "entry.YOUR_ID_HERE";     // Notes (you'll need to add this)
+    const ENTRY_PHOTO = "entry.1845959569";       // Photo URL (optional)
+
+    // Form elements
     const photoInput = document.getElementById("photoInput");
     const btnExtract = document.getElementById("btnExtract");
     const btnClear = document.getElementById("btnClear");
-    const btnGoForm = document.getElementById("btnGoForm");
+    const btnSubmit = document.getElementById("btnSubmit");
+    const btnReset = document.getElementById("btnReset");
 
     const imgWrap = document.getElementById("imgWrap");
     const previewImg = document.getElementById("previewImg");
@@ -216,6 +289,10 @@
     const statusText = document.getElementById("statusText");
     const barFill = document.getElementById("barFill");
 
+    const titleBox = document.getElementById("titleBox");
+    const categoryBox = document.getElementById("categoryBox");
+    const tagsBox = document.getElementById("tagsBox");
+    const timeBox = document.getElementById("timeBox");
     const ingredientsBox = document.getElementById("ingredientsBox");
     const stepsBox = document.getElementById("stepsBox");
     const notesBox = document.getElementById("notesBox");
@@ -235,9 +312,13 @@
       previewImg.src = "";
       btnExtract.disabled = true;
       btnClear.disabled = true;
-      btnGoForm.disabled = true;
       status.style.display = "none";
       barFill.style.width = "0%";
+      
+      titleBox.value = "";
+      categoryBox.value = "";
+      tagsBox.value = "";
+      timeBox.value = "";
       ingredientsBox.value = "";
       stepsBox.value = "";
       notesBox.value = "";
@@ -255,13 +336,37 @@
 
       btnExtract.disabled = false;
       btnClear.disabled = false;
-      btnGoForm.disabled = false; // allow form even if they skip OCR
     });
 
-    btnClear.addEventListener("click", resetAll);
+    btnClear.addEventListener("click", () => {
+      fileBlob = null;
+      photoInput.value = "";
+      imgWrap.style.display = "none";
+      previewImg.src = "";
+      btnExtract.disabled = true;
+      btnClear.disabled = true;
+      status.style.display = "none";
+      barFill.style.width = "0%";
+    });
 
-    // Simple heuristic splitter for typed cards:
-    // We try to locate an "Ingredients" block and an "Instructions/Steps" block.
+    btnReset.addEventListener("click", () => {
+      if(confirm("Are you sure you want to clear all fields?")) {
+        resetAll();
+      }
+    });
+
+    // Normalize line breaks to pipe characters for Google Sheets
+    function normalizeToPipes(text) {
+      if (!text) return "";
+      // Replace newlines with pipes, then clean up multiple pipes
+      return text
+        .split(/\n/)
+        .map(line => line.trim())
+        .filter(line => line.length > 0)
+        .join("|");
+    }
+
+    // Simple heuristic splitter for typed cards
     function splitIntoIngredientsAndSteps(text){
       const clean = (text || "").replace(/\r/g, "").trim();
 
@@ -318,39 +423,74 @@
         ingredientsBox.value = ingredients || "";
         stepsBox.value = steps || "";
 
-        setProgress(100, "Done. Review & edit the text.");
-        setTimeout(() => { status.style.display = "none"; }, 900);
+        setProgress(100, "Done! Review and edit the text, then fill in the other fields.");
+        setTimeout(() => { status.style.display = "none"; }, 1500);
       } catch (err){
         console.error(err);
-        setProgress(100, "OCR failed. You can still continue to the form.");
-        btnExtract.disabled = false;
+        setProgress(100, "OCR failed. You can still type the recipe manually.");
+        setTimeout(() => { status.style.display = "none"; }, 2000);
       } finally {
         btnExtract.disabled = false;
       }
     });
 
-    // If you ALSO want to include a photo URL in the form:
-    // - For fast test we do NOT upload anywhere; the photo stays local.
-    // - If you want the photo URL to show on the site, use your existing upload flow (Vercel Blob)
-    //   and set photoUrlValue to the returned URL.
-    //
-    // For now, we leave Photo URL blank unless you already generate it elsewhere.
-    let photoUrlValue = ""; // set this if you're generating a URL via your upload endpoint
+    btnSubmit.addEventListener("click", () => {
+      // Validate required fields
+      if (!titleBox.value.trim()) {
+        alert("Please enter a recipe title.");
+        titleBox.focus();
+        return;
+      }
+      if (!categoryBox.value) {
+        alert("Please select a category.");
+        categoryBox.focus();
+        return;
+      }
+      if (!ingredientsBox.value.trim()) {
+        alert("Please enter ingredients.");
+        ingredientsBox.focus();
+        return;
+      }
+      if (!stepsBox.value.trim()) {
+        alert("Please enter cooking directions.");
+        stepsBox.focus();
+        return;
+      }
 
-    btnGoForm.addEventListener("click", () => {
       const params = new URLSearchParams();
 
-      // Prefill fields if IDs are set
-      if(ENTRY_ING && !ENTRY_ING.includes("?")) params.set(ENTRY_ING, ingredientsBox.value.trim());
-      if(ENTRY_STEPS && !ENTRY_STEPS.includes("?")) params.set(ENTRY_STEPS, stepsBox.value.trim());
+      // Add all fields to the form URL
+      params.set(ENTRY_TITLE, titleBox.value.trim());
       
+      if(ENTRY_CATEGORY && !ENTRY_CATEGORY.includes("YOUR_ID")) {
+        params.set(ENTRY_CATEGORY, categoryBox.value);
+      }
+      
+      if(ENTRY_TAGS && !ENTRY_TAGS.includes("YOUR_ID")) {
+        params.set(ENTRY_TAGS, tagsBox.value.trim());
+      }
+      
+      if(ENTRY_TIME && !ENTRY_TIME.includes("YOUR_ID")) {
+        params.set(ENTRY_TIME, timeBox.value.trim());
+      }
+      
+      // Convert newlines to pipes for ingredients and steps
+      params.set(ENTRY_ING, normalizeToPipes(ingredientsBox.value));
+      params.set(ENTRY_STEPS, normalizeToPipes(stepsBox.value));
+      
+      if(ENTRY_NOTES && !ENTRY_NOTES.includes("YOUR_ID")) {
+        params.set(ENTRY_NOTES, notesBox.value.trim());
+      }
+
+      // If you have a photo upload system that generates URLs, set it here
+      // For now we're leaving this empty
+      // if(ENTRY_PHOTO && photoUrlValue) {
+      //   params.set(ENTRY_PHOTO, photoUrlValue);
+      // }
 
       const url = `${FORM_BASE}?usp=pp_url&${params.toString()}`;
       window.location.href = url;
     });
-
-    // start clean
-    resetAll();
   </script>
 </body>
 </html>
