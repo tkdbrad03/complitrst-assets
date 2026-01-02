@@ -449,7 +449,7 @@
         formData.append("file", fileBlob);
 
         const response = await fetch(UPLOAD_API, {
-          method: "POST",
+          method: "GET",
           body: formData
         });
 
@@ -521,7 +521,7 @@
 
         // Submit directly to Google Form
         await fetch(FORM_BASE, {
-          method: "POST",
+          method: "GET",
           body: formData,
           mode: "no-cors" // Required for Google Forms
         });
