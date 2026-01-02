@@ -441,7 +441,7 @@
 <!-- Splash Screen -->
 <div id="splash">
 <div>
-<h1>Family Recipes</h1>
+<h1>Family & Friends Recipes</h1>
 <div class="gold-rule" style="margin:16px auto;"></div>
 <p>
         A digital collection of treasured handwritten and typed recipes,
@@ -449,9 +449,9 @@
       </p>
 <button class="splash-btn" onclick="enterCookbook()" type="button">Open Cookbook</button>
 <p style="margin-top:32px; font-size:14px;">
-        Or jump to:
-        <a href="#" onclick="enterAndGo('#peach-cobbler'); return false;" style="color:var(--gold); margin:0 8px;">Peach Cobbler</a>
-        <a href="#" onclick="enterAndGo('#texas-chowchow'); return false;" style="color:var(--gold); margin:0 8px;">Texas Chow-Chow</a>
+        <a class="share-recipe-link" href="/share" rel="noopener noreferrer" target="_blank">
+  Share a Recipe
+</a>
 </p>
 </div>
 </div>
@@ -466,7 +466,7 @@
 <li><a href="#peach-cobbler" onclick="closeTOC()">Peach Cobbler</a></li>
 <li><a href="#egg-custard" onclick="closeTOC()">Old-Fashioned Egg Custard</a></li>
 <li><a href="#sweet-potato-pie" onclick="closeTOC()">Sweet Potato Pie</a></li>
-<li><a href="#texas-chowchow" onclick="closeTOC()">Texas Chow-Chow</a></li>
+<li><a href="#chowchow" onclick="closeTOC()">Chow-Chow</a></li>
 <li><a href="#collard-greens" onclick="closeTOC()">Instant Pot Southern Collard Greens</a></li>
 <li><a href="#source" onclick="closeTOC()">Source Notes</a></li>
 </ul>
@@ -481,7 +481,7 @@
 <div>
 <h1 class="title">Family Recipes</h1>
 <p class="subtitle">
-            Heritage favorites, transcribed from handwritten and typed pages. Now with interactive checklists and print options.
+            Transcribed from handwritten and typed pages. Now with interactive checklists and print options.
           </p>
 <div class="gold-rule"></div>
 </div>
@@ -606,9 +606,9 @@
           </p>
 </div>
 </div>
-<!-- Texas Chow-Chow -->
-<section class="section" id="texas-chowchow">
-<h2>Texas Chow-Chow</h2>
+<!-- Chow-Chow -->
+<section class="section" id="chowchow">
+<h2>Chow-Chow</h2>
 <div class="meta">
 <span class="pill">Preserved</span>
 <span class="pill">Canning</span>
@@ -629,7 +629,7 @@
 </ul>
 <div class="controls">
 <button onclick="resetGroup('chowchow')" type="button">Reset checkboxes</button>
-<button onclick="printSection('texas-chowchow')" type="button">Print this recipe</button>
+<button onclick="printSection('chowchow')" type="button">Print this recipe</button>
 </div>
 </div>
 <div class="box">
@@ -652,7 +652,7 @@
 <div class="meta">
 <span class="pill">Savory</span>
 <span class="pill">Instant Pot</span>
-<span class="pill">25 minutes (High Pressure)</span>
+<span class="pill">50 minutes (High Pressure)</span>
 </div>
 </section>
 <div class="content">
@@ -836,10 +836,10 @@
 // 4. Click Publish and copy the URL
 // 5. Replace the URL below with your published CSV URL
 
-const GOOGLE_SHEET_CSV_URL = 'YOUR_PUBLISHED_CSV_URL_HERE';
+const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSfZkZn3OuZSWMbxsASOLj0adOB7Navcv5lQ0L_XH-Wl5l0YpWLwboQsXBalf0tqBkDN_ZQp0dnrAva/pub?output=csv';
 
 // Expected CSV columns (in order):
-// Timestamp, Title, Category, Tags, Time, Ingredients, Directions, Notes, Photo URL, Photo URL
+// Timestamp, Title, Category, Tags, Time, Ingredients, Directions, Notes, Photo URL
 
 let recipeCounter = 0; // For generating unique IDs
 
@@ -951,7 +951,7 @@ function createDynamicRecipe(data) {
 
 function loadDynamicRecipes() {
   // Don't load if URL is not configured
-  if (!GOOGLE_SHEET_CSV_URL || GOOGLE_SHEET_CSV_URL === 'YOUR_PUBLISHED_CSV_URL_HERE') {
+  if (!GOOGLE_SHEET_CSV_URL || GOOGLE_SHEET_CSV_URL === 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSfZkZn3OuZSWMbxsASOLj0adOB7Navcv5lQ0L_XH-Wl5l0YpWLwboQsXBalf0tqBkDN_ZQp0dnrAva/pub?output=csv') {
     console.log('Google Sheets CSV URL not configured. Skipping dynamic recipes.');
     return;
   }
