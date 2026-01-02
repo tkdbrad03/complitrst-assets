@@ -836,10 +836,10 @@
 // 4. Click Publish and copy the URL
 // 5. Replace the URL below with your published CSV URL
 
-const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSfZkZn3OuZSWMbxsASOLj0adOB7Navcv5lQ0L_XH-Wl5l0YpWLwboQsXBalf0tqBkDN_ZQp0dnrAva/pub?output=csv';
+const GOOGLE_SHEET_CSV_URL = 'YOUR_PUBLISHED_CSV_URL_HERE';
 
 // Expected CSV columns (in order):
-// Timestamp, Title, Category, Tags, Time, Ingredients, Directions, Notes
+// Timestamp, Title, Category, Tags, Time, Ingredients, Directions, Notes, Photo URL, Photo URL
 
 let recipeCounter = 0; // For generating unique IDs
 
@@ -863,8 +863,9 @@ function parseCSV(text) {
 }
 
 function createDynamicRecipe(data) {
-  // Skip timestamp in column A (index 0)
-  const [timestamp, title, category, tags, time, ingredients, directions, notes] = data;
+  // Column structure: Timestamp, Title, Category, Tags, Time, Ingredients, Directions, Notes, Photo URL
+  // We skip: timestamp (index 0) and photo URL (index 8)
+  const [timestamp, title, category, tags, time, ingredients, directions, notes, photoUrl] = data;
   
   if (!title) return ''; // Skip empty rows
   
@@ -872,13 +873,13 @@ function createDynamicRecipe(data) {
   const recipeId = sanitizeId(title) || `recipe-${recipeCounter}`;
   const groupName = `dynamic-${recipeCounter}`;
   
-  // Parse tags (comma-separated)
+  // Parse tags (pipe-separated)
   const tagsList = tags ? tags.split('|').map(t => t.trim()).filter(Boolean) : [];
   
-  // Parse ingredients (line-separated with | or newline)
+  // Parse ingredients (pipe-separated)
   const ingredientsList = ingredients ? ingredients.split('|').map(i => i.trim()).filter(Boolean) : [];
   
-  // Parse directions (line-separated with | or newline)
+  // Parse directions (pipe-separated)
   const directionsList = directions ? directions.split('|').map(d => d.trim()).filter(Boolean) : [];
   
   // Build the pills (tags + time if provided)
@@ -917,6 +918,9 @@ function createDynamicRecipe(data) {
     notesHTML = `<p class="notes">${notes}</p>`;
   }
   
+  // NOTE: We're NOT displaying the photo URL in the cookbook
+  // photoUrl is stored in the sheet but not shown to users
+  
   // Assemble the complete recipe HTML matching your format
   return `
     <section class="section" id="${recipeId}">
@@ -947,7 +951,7 @@ function createDynamicRecipe(data) {
 
 function loadDynamicRecipes() {
   // Don't load if URL is not configured
-  if (!GOOGLE_SHEET_CSV_URL || GOOGLE_SHEET_CSV_URL === 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSfZkZn3OuZSWMbxsASOLj0adOB7Navcv5lQ0L_XH-Wl5l0YpWLwboQsXBalf0tqBkDN_ZQp0dnrAva/pub?output=csvE') {
+  if (!GOOGLE_SHEET_CSV_URL || GOOGLE_SHEET_CSV_URL === 'YOUR_PUBLISHED_CSV_URL_HERE') {
     console.log('Google Sheets CSV URL not configured. Skipping dynamic recipes.');
     return;
   }
