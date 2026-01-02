@@ -947,7 +947,7 @@ function createDynamicRecipe(data) {
 
 function loadDynamicRecipes() {
   // Don't load if URL is not configured
-  if (!GOOGLE_SHEET_CSV_URL || GOOGLE_SHEET_CSV_URL === 'YOUR_PUBLISHED_CSV_URL_HERE') {
+  if (!GOOGLE_SHEET_CSV_URL || GOOGLE_SHEET_CSV_URL === 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSfZkZn3OuZSWMbxsASOLj0adOB7Navcv5lQ0L_XH-Wl5l0YpWLwboQsXBalf0tqBkDN_ZQp0dnrAva/pub?output=csvE') {
     console.log('Google Sheets CSV URL not configured. Skipping dynamic recipes.');
     return;
   }
