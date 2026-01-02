@@ -525,6 +525,42 @@
     }
   </style>
 </head>
+<script>
+const sheetID = '1MwdL2FF4qjztEXQZqNtxBIkJ2zHpqIb1dmSAfWielMI';
+const tabName = 'Recipes'; // Replace with your tab name if needed
+
+const sheetURL = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:json&sheet=${tabName}`;
+
+fetch(sheetURL)
+  .then(res => res.text())
+  .then(text => {
+    const json = JSON.parse(text.substring(47).slice(0, -2));
+    const rows = json.table.rows;
+    const container = document.querySelector("#dynamic-recipes");
+
+
+    rows.forEach(row => {
+      const data = row.c.map(cell => cell ? cell.v : '');
+      const [title, ingredients, steps, notes, imageURL] = data;
+
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <div class="inner">
+          <h2>${title}</h2>
+          <img src="${imageURL}" alt="${title}" style="max-width:100%;border-radius:12px;margin-top:12px;" />
+          <p><strong>Ingredients:</strong><br>${ingredients.replace(/\n/g, '<br>')}</p>
+          <p><strong>Steps:</strong><br>${steps.replace(/\n/g, '<br>')}</p>
+          <p><strong>Notes:</strong><br>${notes}</p>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+  })
+  .catch(err => {
+    console.error("Error loading recipes:", err);
+  });
+</script>
 
 <body>
 
@@ -967,6 +1003,7 @@
           </div>
         </div>
       </div>
+<div id="dynamic-recipes"></div>
 
     </main>
 
