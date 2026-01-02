@@ -1033,8 +1033,8 @@
     })();
   </script>
 <script>
-https://docs.google.com/spreadsheets/d/e/2PACX-1vSfZkZn3OuZSWMbxsASOLj0adOB7Navcv5lQ0L_XH-Wl5l0YpWLwboQsXBalf0tqBkDN_ZQp0dnrAva/pubhtml
-fetch(sheetURL)
+const sheetURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSfZkZn3OuZSWMbxsASOLj0adOB7Navcv5lQ0L_XH-Wl5l0YpWLwboQsXBalf0tqBkDN_ZQp0dnrAva/pubhtml';
+    fetch(sheetURL)
   .then(response => response.text())
   .then(data => {
     const rows = data.trim().split('\n').map(row => row.split('\t'));
