@@ -252,590 +252,375 @@
       cursor:pointer;
       padding: 14px 12px;
       list-style:none;
+      font-weight:500;
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:10px;
-      background: linear-gradient(180deg, rgba(225,182,182,.22), rgba(251,246,239,.92));
-      border-bottom: 1px solid rgba(142,113,88,.16);
-      font-family: var(--serif);
-      font-size: 16px;
     }
-    summary::-webkit-details-marker{ display:none; }
-    details .detail-body{ padding:14px; }
+    summary::-webkit-details-marker{display:none;}
+    summary::after{
+      content:'▼';
+      font-size:11px;
+      color:var(--gold);
+      transition: transform .15s ease;
+    }
+    details[open] summary::after{ transform:rotate(180deg); }
+    details .inner{ padding: 0 12px 14px; }
 
-    /* Divider pages */
+    /* Divider / Chapter */
     .divider-page{
-      padding: 46px 18px;
-      text-align: center;
-      border-bottom: 1px solid rgba(142,113,88,.18);
+      display:flex;
+      align-items:center;
+      justify-content:center;
       background:
-        radial-gradient(900px 420px at 20% 20%, rgba(225,182,182,.45), transparent 60%),
-        radial-gradient(900px 420px at 80% 15%, rgba(142,113,88,.18), transparent 62%),
-        linear-gradient(180deg, rgba(251,246,239,.92), rgba(255,255,255,.98));
-      border-radius: 18px;
-      box-shadow: 0 10px 24px rgba(0,0,0,.04);
-      border: 1px solid rgba(142,113,88,.20);
-      margin-top: 18px;
+        linear-gradient(160deg, rgba(225,182,182,.55), rgba(251,246,239,.90)),
+        radial-gradient(900px 450px at 50% 50%, rgba(26,47,35,.04), transparent 60%);
+      border-radius: var(--radius);
+      border: 1px solid rgba(142,113,88,.28);
+      box-shadow: var(--shadow);
+      padding:50px 18px;
+      margin: 48px 0 32px;
     }
-    .divider-title{
+    .divider-page h2{
       font-family: var(--serif);
-      margin: 0;
-      font-size: clamp(28px, 5vw, 44px);
-      letter-spacing: .3px;
-      color: var(--ink);
-    }
-    .divider-rule{
-      height: 2px;
-      width: 120px;
-      margin: 14px auto 0;
-      border-radius: 2px;
-      background: linear-gradient(90deg, transparent, var(--gold), transparent);
-    }
-    .divider-actions{
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-top: 18px;
-    }
-    .divider-actions a{
-      display: inline-block;
-      padding: 10px 12px;
-      border-radius: 14px;
-      text-decoration: none;
-      color: var(--ink);
-      border: 1px solid rgba(142,113,88,.45);
-      background: rgba(255,255,255,.70);
-      transition: transform .08s ease;
-    }
-    .divider-actions a:hover{ transform: translateY(-1px); }
-
-    /* Footer */
-    .footer{
+      font-size: clamp(26px, 4.5vw, 36px);
+      letter-spacing: .5px;
+      margin:0;
       text-align:center;
-      color: rgba(26,47,35,.70);
-      font-size:12px;
-      margin-top: 8px;
     }
-    .show-cover{
-      text-decoration: none;
-      font-size: 12px;
-      color: rgba(26,47,35,.65);
-      margin-left: 4px;
-    }
-    .show-cover:hover{ text-decoration: underline; }
 
-    /* =========================
-       MOBILE TOC PANEL
-       ========================= */
-    .toc-fab{
-      position: fixed;
-      right: 14px;
-      bottom: 14px;
-      z-index: 1200;
-      padding: 12px 14px;
-      border-radius: 999px;
-      border: 1px solid rgba(142,113,88,.45);
-      background: rgba(255,255,255,.78);
-      color: var(--ink);
-      font-size: 13px;
-      box-shadow: 0 12px 28px rgba(0,0,0,.12);
+    /* Splash Screen */
+    #splash{
+      position:fixed;
+      inset:0;
+      z-index:9999;
+      background:
+        radial-gradient(1200px 700px at 10% 10%, rgba(225,182,182,.60), transparent 55%),
+        radial-gradient(1000px 650px at 90% 15%, rgba(142,113,88,.22), transparent 55%),
+        linear-gradient(180deg, var(--cream), #fff);
+      display:grid;
+      place-content:center;
+      text-align:center;
+      padding:18px;
     }
+    #splash h1{
+      font-family: var(--serif);
+      font-size: clamp(38px, 7vw, 56px);
+      margin:0 0 10px;
+      letter-spacing: .6px;
+    }
+    #splash p{
+      margin: 10px 0 0;
+      font-size: 16px;
+      color: rgba(26,47,35,.78);
+      max-width:500px;
+    }
+    .splash-btn{
+      margin-top: 28px;
+      padding: 16px 28px;
+      border: 1px solid rgba(142,113,88,.45);
+      background: linear-gradient(180deg, rgba(225,182,182,.45), rgba(251,246,239,1));
+      border-radius: 18px;
+      font-size: 16px;
+      cursor:pointer;
+      transition: transform .15s ease;
+      display:inline-block;
+      text-decoration:none;
+      color:var(--ink);
+    }
+    .splash-btn:hover{ transform: translateY(-2px); }
+
+    /* TOC Sidebar */
+    .toc-backdrop{
+      position:fixed;
+      inset:0;
+      background: rgba(26,47,35,.35);
+      backdrop-filter: blur(2px);
+      z-index:1000;
+      display:none;
+    }
+    .toc-backdrop.open{ display:block; }
 
     .toc-panel{
-      position: fixed;
-      top: 0;
-      right: 0;
-      height: 100vh;
-      width: min(360px, 92vw);
+      position:fixed;
+      top:0;
+      right:0;
+      bottom:0;
+      width: min(370px, 85vw);
       background: var(--paper);
-      border-left: 1px solid rgba(142,113,88,.22);
-      box-shadow: -18px 0 40px rgba(0,0,0,.14);
-      transform: translateX(110%);
-      transition: transform .22s ease;
-      z-index: 1300;
-      overflow: auto;
-      -webkit-overflow-scrolling: touch;
+      box-shadow: -6px 0 28px rgba(0,0,0,.2);
+      transform: translateX(100%);
+      transition: transform .25s ease;
+      overflow-y:auto;
+      z-index:1001;
     }
     .toc-panel.open{ transform: translateX(0); }
 
-    .toc-panel-inner{ padding: 16px; }
-    .toc-panel-header{
+    .toc-header{
+      position:sticky;
+      top:0;
+      background: linear-gradient(180deg, var(--cream), var(--paper));
+      padding: 18px 16px;
+      border-bottom: 1px solid rgba(142,113,88,.20);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      z-index:10;
+    }
+    .toc-header h2{
+      margin:0;
+      font-family: var(--serif);
+      font-size: 20px;
+    }
+    .close-toc{
+      border:none;
+      background:none;
+      font-size:24px;
+      cursor:pointer;
+      padding:4px;
+      color:var(--ink);
+    }
+
+    .toc-list{
+      list-style:none;
+      padding:0;
+      margin:12px;
+    }
+    .toc-list li{
+      margin: 8px 0;
+    }
+    .toc-list a{
+      display:block;
+      padding: 10px 10px;
+      border-radius: 12px;
+      color: var(--ink);
+      text-decoration:none;
+      transition: background .1s ease;
+    }
+    .toc-list a:hover{
+      background: rgba(225,182,182,.18);
+    }
+
+    /* FAB */
+    .toc-fab{
+      position:fixed;
+      bottom: 22px;
+      right: 22px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(225,182,182,.92), rgba(142,113,88,.88));
+      border: 1px solid rgba(142,113,88,.45);
+      box-shadow: 0 8px 22px rgba(26,47,35,.22);
+      cursor:pointer;
       display:flex;
       align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid rgba(142,113,88,.18);
+      justify-content:center;
+      font-size: 22px;
+      color:#fff;
+      transition: transform .15s ease;
+      z-index:999;
     }
-    .toc-panel h2{
-      font-family: var(--serif);
-      margin: 0;
-      font-size: 18px;
-    }
-    .toc-close{
-      padding: 9px 10px;
-      border-radius: 12px;
-      font-size: 12px;
-    }
-    .toc-links{
-      display:grid;
-      gap: 10px;
-      padding: 14px 0;
-    }
-    .toc-links a{
-      display:block;
-      padding:12px 12px;
-      border-radius: 14px;
-      text-decoration:none;
-      color: var(--ink);
-      background: linear-gradient(180deg, rgba(225,182,182,.18), rgba(251,246,239,.88));
-      border: 1px solid rgba(142,113,88,.22);
-      font-size: 14px;
-    }
-    .toc-tip{
-      display:block;
-      color: rgba(26,47,35,.72);
-      font-size: 12px;
-      padding-bottom: 16px;
-    }
-    .toc-backdrop{
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.24);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity .22s ease;
-      z-index: 1250;
-    }
-    .toc-backdrop.open{
-      opacity: 1;
-      pointer-events: auto;
-    }
+    .toc-fab:hover{ transform: scale(1.06); }
 
-    /* =========================
-       SPLASH / COVER SCREEN
-       ========================= */
-    .splash{
-      position: fixed;
-      inset: 0;
-      z-index: 2000;
-      display: grid;
-      place-items: center;
-      padding: 18px;
-      background:
-        radial-gradient(900px 500px at 20% 15%, rgba(225,182,182,.72), transparent 58%),
-        radial-gradient(900px 500px at 80% 20%, rgba(142,113,88,.20), transparent 62%),
-        linear-gradient(180deg, var(--cream), #ffffff);
-    }
-    .splash-card{
-      width: min(860px, 96vw);
-      border-radius: 26px;
-      box-shadow: 0 22px 60px rgba(0,0,0,.18);
-      background: rgba(255,255,255,.86);
-      border: 1px solid rgba(142,113,88,.35);
-      overflow: hidden;
-    }
-    .splash-frame{
-      padding: clamp(32px, 6vw, 56px);
-      background:
-        linear-gradient(120deg, rgba(225,182,182,.42), rgba(251,246,239,.95) 55%, rgba(142,113,88,.18));
-      border-radius: 26px;
-      min-height: 380px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 26px;
+    /* Footer link */
+    .footer{
+      margin-top: 48px;
       text-align:center;
+      font-size:13px;
+      color: rgba(26,47,35,.72);
     }
-    .splash-title{
-      margin: 0;
-      font-family: var(--serif);
-      font-size: clamp(36px, 6vw, 56px);
-      line-height: 1.05;
-      letter-spacing: .3px;
-      color: var(--ink);
+    .footer a{
+      color: var(--gold);
+      text-decoration:none;
     }
-    .splash-actions{
-      display: grid;
-      gap: 12px;
-      width: min(420px, 100%);
-    }
-    .splash-btn{
-      width: 100%;
-      padding: 14px 16px;
-      border-radius: 16px;
-      border: 1px solid rgba(142,113,88,.45);
-      background: rgba(255,255,255,.78);
-      font-size: 15px;
-      letter-spacing: .02em;
-    }
-    .splash-btn.primary{
-      background: linear-gradient(180deg, rgba(26,47,35,.96), rgba(26,47,35,.90));
-      border-color: rgba(26,47,35,.65);
-      color: #fff;
-    }
-    .splash-share{
-  margin-top: 10px;
-}
-
-   
-    /* =========================
-   Share a Recipe (Splash Link)
-   ========================= */
-.share-recipe-link{
-  margin-top: 18px;
-  font-size: 13px;
-  letter-spacing: .04em;
-  text-decoration: none;
-  color: rgba(26,47,35,.75);
-  position: relative;
-}
-
-.share-recipe-link::after{
-  content: "";
-  display: block;
-  height: 1px;
-  width: 100%;
-  margin-top: 4px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(142,113,88,.6),
-    transparent
-  );
-  opacity: .6;
-}
-
-.share-recipe-link:hover{
-  color: rgba(26,47,35,.95);
-}
-
-
-
-    /* Print */
-    @media print{
-      body{ background:#fff; }
-      .toc-fab, .toc-panel, .toc-backdrop, .splash { display:none !important; }
-      button{ display:none; }
-      .card{ box-shadow:none; }
-      details{ box-shadow:none; }
-    }
+    .footer a:hover{ text-decoration:underline; }
   </style>
 </head>
 <body>
-<!-- Splash / Cover Screen -->
-<div aria-modal="true" class="splash" id="splash" role="dialog">
-<div class="splash-card">
-<div class="splash-frame">
-<h1 class="splash-title">Interactive Cookbook</h1>
-<div class="splash-actions">
-<button class="splash-btn primary" onclick="enterCookbook()" type="button">Enter Cookbook</button>
-<button class="splash-btn" onclick="enterAndGo('#desserts')" type="button">Jump to Desserts</button>
-<button class="splash-btn" onclick="enterAndGo('#savory')" type="button">Jump to Savory</button>
-<div class="splash-share">
-<a class="share-recipe-link" href="/share" rel="noopener noreferrer" target="_blank">
-  Share a Recipe
-</a>
+<!-- Splash Screen -->
+<div id="splash">
+<div>
+<h1>Family Recipes</h1>
+<div class="gold-rule" style="margin:16px auto;"></div>
+<p>
+        A digital collection of treasured handwritten and typed recipes,
+        now with interactive features.
+      </p>
+<button class="splash-btn" onclick="enterCookbook()" type="button">Open Cookbook</button>
+<p style="margin-top:32px; font-size:14px;">
+        Or jump to:
+        <a href="#" onclick="enterAndGo('#peach-cobbler'); return false;" style="color:var(--gold); margin:0 8px;">Peach Cobbler</a>
+        <a href="#" onclick="enterAndGo('#texas-chowchow'); return false;" style="color:var(--gold); margin:0 8px;">Texas Chow-Chow</a>
+</p>
 </div>
 </div>
-</div>
-</div>
-</div>
-<!-- Mobile TOC -->
-<button aria-controls="tocPanel" aria-expanded="false" class="toc-fab" onclick="toggleTOC()" type="button">
-    Contents
-  </button>
+<!-- TOC -->
+<div class="toc-backdrop" id="tocBackdrop" onclick="closeTOC()"></div>
 <aside aria-hidden="true" class="toc-panel" id="tocPanel">
-<div class="toc-panel-inner">
-<div class="toc-panel-header">
+<div class="toc-header">
 <h2>Table of Contents</h2>
-<button class="toc-close" onclick="closeTOC()" type="button">Close</button>
+<button aria-label="Close menu" class="close-toc" onclick="closeTOC()" type="button">×</button>
 </div>
-<nav class="toc-links">
-<a href="#desserts" onclick="closeTOC()">Desserts</a>
-<a href="#key-lime" onclick="closeTOC()">Key Lime Cake</a>
-<a href="#cream-cheese" onclick="closeTOC()">Cream Cheese Frosting</a>
-<a href="#red-velvet" onclick="closeTOC()">Red Velvet Cake (Heritage)</a>
-<a href="#mississippi-mud" onclick="closeTOC()">Mississippi Mud Cake</a>
-<a href="#savory" onclick="closeTOC()">Savory</a>
-<a href="#texas-chowchow" onclick="closeTOC()">Texas Chow Chow</a>
-<a href="#collard-greens" onclick="closeTOC()">Instant Pot Southern Collard Greens</a>
-<a href="#source" onclick="closeTOC()">Source Notes</a>
-</nav>
-<small class="toc-tip">
-        Tip: Use “Reset checkboxes” at the bottom of each recipe to clear your ingredient list.
-      </small>
-</div>
+<ul class="toc-list">
+<li><a href="#peach-cobbler" onclick="closeTOC()">Peach Cobbler</a></li>
+<li><a href="#egg-custard" onclick="closeTOC()">Old-Fashioned Egg Custard</a></li>
+<li><a href="#sweet-potato-pie" onclick="closeTOC()">Sweet Potato Pie</a></li>
+<li><a href="#texas-chowchow" onclick="closeTOC()">Texas Chow-Chow</a></li>
+<li><a href="#collard-greens" onclick="closeTOC()">Instant Pot Southern Collard Greens</a></li>
+<li><a href="#source" onclick="closeTOC()">Source Notes</a></li>
+</ul>
 </aside>
-<div aria-hidden="true" class="toc-backdrop" id="tocBackdrop" onclick="closeTOC()"></div>
+<button aria-expanded="false" aria-label="Open table of contents" class="toc-fab" onclick="toggleTOC()" type="button">☰</button>
+<!-- Main Content -->
 <div class="wrap">
-<!-- Cover (inside cookbook) -->
-<section class="cover card" id="top">
+<main class="card" id="top">
+<!-- Cover inside the cookbook (hidden once user enters) -->
+<div class="cover">
 <div class="inner">
 <div>
-<h1 class="title">Interactive Cookbook</h1>
+<h1 class="title">Family Recipes</h1>
+<p class="subtitle">
+            Heritage favorites, transcribed from handwritten and typed pages. Now with interactive checklists and print options.
+          </p>
 <div class="gold-rule"></div>
-<p class="subtitle"></p>
 </div>
-<div class="badge">collapsible recipes • print-friendly</div>
+<span class="badge">Interactive Edition</span>
 </div>
-</section>
-<!-- MAIN CONTENT -->
-<main class="card">
-<!-- Divider: Desserts -->
-<section class="divider-page" id="desserts">
-<h2 class="divider-title">Desserts</h2>
-<div class="divider-rule"></div>
-<div class="divider-actions">
-<a href="#key-lime">Key Lime Cake</a>
-<a href="#cream-cheese">Cream Cheese Frosting</a>
-<a href="#red-velvet">Red Velvet Cake</a>
-<a href="#mississippi-mud">Mississippi Mud Cake</a>
 </div>
-</section>
-<!-- Key Lime Cake -->
-<section class="section" id="key-lime">
-<h2>Key Lime Cake</h2>
+<!-- Peach Cobbler -->
+<section class="section" id="peach-cobbler">
+<h2>Peach Cobbler</h2>
 <div class="meta">
 <span class="pill">Dessert</span>
-<span class="pill">Citrus</span>
-<span class="pill">Pairs with Lime Cream Cheese Frosting</span>
+<span class="pill">Bake 350°F, 50 min</span>
 </div>
 </section>
 <div class="content">
 <div class="box">
 <h3>Ingredients</h3>
-<ul class="checklist" data-group="keylime">
-<li><input id="kl1" type="checkbox"/><label for="kl1">1 cup canola or olive oil</label></li>
-<li><input id="kl2" type="checkbox"/><label for="kl2">3 large eggs</label></li>
-<li><input id="kl3" type="checkbox"/><label for="kl3">1⅓ cups whole milk</label></li>
-<li><input id="kl4" type="checkbox"/><label for="kl4">2 tablespoons fresh lime zest</label></li>
-<li><input id="kl5" type="checkbox"/><label for="kl5">1 tablespoon fresh lime juice</label></li>
-<li><input id="kl6" type="checkbox"/><label for="kl6">2 cups sugar</label></li>
-<li><input id="kl7" type="checkbox"/><label for="kl7">2 cups flour</label></li>
-<li><input id="kl8" type="checkbox"/><label for="kl8">1 teaspoon baking powder</label></li>
-<li><input id="kl9" type="checkbox"/><label for="kl9">½ teaspoon baking soda</label></li>
-<li><input id="kl10" type="checkbox"/><label for="kl10">1 teaspoon salt</label></li>
-<li><input id="kl11" type="checkbox"/><label for="kl11">Fresh limes (optional garnish)</label></li>
+<ul class="checklist" data-group="peachCobbler">
+<li><input id="pc1" type="checkbox"/><label for="pc1">1 stick butter</label></li>
+<li><input id="pc2" type="checkbox"/><label for="pc2">2 cups self-rising flour</label></li>
+<li><input id="pc3" type="checkbox"/><label for="pc3">2 cups sugar</label></li>
+<li><input id="pc4" type="checkbox"/><label for="pc4">2 cups sweet milk</label></li>
+<li><input id="pc5" type="checkbox"/><label for="pc5">1 (29-oz) can sliced peaches (or 2 cups of fresh)</label></li>
 </ul>
 <div class="controls">
-<button onclick="resetGroup('keylime')" type="button">Reset checkboxes</button>
-<button onclick="printSection('key-lime')" type="button">Print this recipe</button>
+<button onclick="resetGroup('peachCobbler')" type="button">Reset checkboxes</button>
+<button onclick="printSection('peach-cobbler')" type="button">Print this recipe</button>
 </div>
 </div>
 <div class="box">
-<h3>Instructions</h3>
+<h3>Directions</h3>
 <ol class="steps">
 <li>Preheat oven to 350°F.</li>
-<li>In a large mixing bowl, combine oil, eggs, whole milk, lime zest, and lime juice. Cream for 2 minutes.</li>
-<li>In a separate bowl, combine sugar, flour, baking powder, baking soda, and salt.</li>
-<li>Stir dry ingredients into the egg mixture and fold until just combined.</li>
-<li>Spray two 9-inch pans (or three 8-inch pans) with nonstick spray. Divide batter evenly.</li>
-<li>Bake:
-              <ul>
-<li>Three 8-inch pans: 20–26 minutes (until a toothpick comes out clean).</li>
-<li>Two 9-inch pans: 30–36 minutes.</li>
-</ul>
-</li>
-<li>Cool completely before frosting.</li>
+<li>Melt butter in a 9×13-inch baking dish.</li>
+<li>In a bowl, mix the flour and sugar. Stir in the milk to make a smooth batter.</li>
+<li>Pour the batter over the melted butter in the baking dish. Do not stir.</li>
+<li>Spoon the peaches and a bit of their juice over the batter. Do not stir.</li>
+<li>Bake for about 50 minutes, or until golden and bubbling.</li>
 </ol>
 <p class="notes">
-            Notes: Bake times can vary by pan and oven. Start checking a few minutes early.
-          </p>
-<!-- Frosting is nested here to match the other recipes' layout -->
-<details style="margin-top:12px;">
-<summary>Lime Cream Cheese Frosting (for Key Lime Cake)</summary>
-<div class="detail-body">
-<div class="content" style="padding:0; grid-template-columns:1fr;">
-<div class="box" style="box-shadow:none;">
-<h3>Ingredients</h3>
-<ul class="checklist" data-group="limefrost">
-<li><input id="lf1" type="checkbox"/><label for="lf1">½ cup butter (softened)</label></li>
-<li><input id="lf2" type="checkbox"/><label for="lf2">8 oz cream cheese (softened)</label></li>
-<li><input id="lf3" type="checkbox"/><label for="lf3">4 to 4½ cups powdered sugar</label></li>
-<li><input id="lf4" type="checkbox"/><label for="lf4">1 tablespoon fresh lime juice</label></li>
-<li><input id="lf5" type="checkbox"/><label for="lf5">½ teaspoon fresh lime zest</label></li>
-</ul>
-</div>
-<div class="box" style="box-shadow:none;">
-<h3>Instructions</h3>
-<ol class="steps">
-<li>Cream butter and cream cheese together for 4–5 minutes until light and fluffy. Scrape sides as needed.</li>
-<li>Add powdered sugar gradually, then add lime juice and lime zest.</li>
-<li>Beat until smooth and spreadable. Adjust with more sugar (thicker) or a tiny splash of milk (looser), if needed.</li>
-</ol>
-<div class="controls">
-<button onclick="resetGroup('limefrost')" type="button">Reset checkboxes</button>
-</div>
-</div>
-</div>
-</div>
-</details>
-</div>
-</div>
-<!-- Cream Cheese Frosting -->
-<section class="section" id="cream-cheese">
-<h2>Cream Cheese Frosting</h2>
-<div class="meta">
-<span class="pill">Frosting</span>
-<span class="pill">Classic</span>
-<span class="pill">Pairs well with Red Velvet</span>
-</div>
-</section>
-<div class="content">
-<div class="box">
-<h3>Ingredients</h3>
-<ul class="checklist" data-group="ccfrost">
-<li><input id="cc1" type="checkbox"/><label for="cc1">8 oz cream cheese (softened)</label></li>
-<li><input id="cc2" type="checkbox"/><label for="cc2">½ cup unsalted butter (softened)</label></li>
-<li><input id="cc3" type="checkbox"/><label for="cc3">4 cups powdered sugar</label></li>
-<li><input id="cc4" type="checkbox"/><label for="cc4">2 teaspoons vanilla extract</label></li>
-</ul>
-<div class="controls">
-<button onclick="resetGroup('ccfrost')" type="button">Reset checkboxes</button>
-<button onclick="printSection('cream-cheese')" type="button">Print this recipe</button>
-</div>
-</div>
-<div class="box">
-<h3>Instructions</h3>
-<ol class="steps">
-<li>Cream butter and cream cheese until smooth and fluffy.</li>
-<li>Add powdered sugar gradually, beating until smooth.</li>
-<li>Mix in vanilla extract.</li>
-<li>Use immediately or refrigerate and re-whip before spreading.</li>
-</ol>
-<p class="notes">Notes: If frosting is too soft, chill 10–15 minutes. If too thick, add 1–2 teaspoons milk.</p>
-</div>
-</div>
-<!-- Red Velvet Cake -->
-<section class="section" id="red-velvet">
-<h2>Red Velvet Cake (Heritage Recipe)</h2>
-<div class="meta">
-<span class="pill">Dessert</span>
-<span class="pill">Handwritten original</span>
-<span class="pill">Bake 350°F</span>
-</div>
-</section>
-<div class="content">
-<div class="box">
-<h3>Ingredients</h3>
-<ul class="checklist" data-group="redvelvet">
-<li><input id="rv1" type="checkbox"/><label for="rv1">2 cups sugar</label></li>
-<li><input id="rv2" type="checkbox"/><label for="rv2">3 eggs</label></li>
-<li><input id="rv3" type="checkbox"/><label for="rv3">1 tablespoon vinegar</label></li>
-<li><input id="rv4" type="checkbox"/><label for="rv4">1 teaspoon cocoa</label></li>
-<li><input id="rv5" type="checkbox"/><label for="rv5">2 (1 oz) bottles red food coloring</label></li>
-<li><input id="rv6" type="checkbox"/><label for="rv6">1 teaspoon vanilla</label></li>
-<li><input id="rv7" type="checkbox"/><label for="rv7">2½ cups plain flour</label></li>
-<li><input id="rv8" type="checkbox"/><label for="rv8">1 cup buttermilk</label></li>
-<li><input id="rv9" type="checkbox"/><label for="rv9">½ cup butter</label></li>
-<li><input id="rv10" type="checkbox"/><label for="rv10">1 teaspoon salt</label></li>
-<li><input id="rv11" type="checkbox"/><label for="rv11">½ teaspoon baking powder</label></li>
-<li><input id="rv12" type="checkbox"/><label for="rv12">1½ teaspoons baking soda</label></li>
-</ul>
-<div class="controls">
-<button onclick="resetGroup('redvelvet')" type="button">Reset checkboxes</button>
-<button onclick="printSection('red-velvet')" type="button">Print this recipe</button>
-</div>
-</div>
-<div class="box">
-<h3>Instructions</h3>
-<ol class="steps">
-<li>Cream sugar and butter.</li>
-<li>Add eggs one at a time.</li>
-<li>Make a paste with vinegar, cocoa, and food coloring; add to the creamed mixture.</li>
-<li>Add flour and buttermilk alternately.</li>
-<li>Add vanilla.</li>
-<li>Pour into 3-layer pans or a sheet pan (makes 3 layers).</li>
-<li>Bake at 350°F for 25–30 minutes. Cool completely.</li>
-<li>Frost with cream cheese frosting.</li>
-</ol>
-<p class="notes">
-            Notes: This recipe is transcribed directly from your handwritten card.
+            Note: The cobbler self-assembles into layers as it bakes. Enjoy warm with vanilla ice cream!
           </p>
 </div>
 </div>
-<!-- Mississippi Mud Cake -->
-<section class="section" id="mississippi-mud">
-<h2>Mississippi Mud Cake</h2>
+<!-- Old-Fashioned Egg Custard -->
+<section class="section" id="egg-custard">
+<h2>Old-Fashioned Egg Custard</h2>
 <div class="meta">
 <span class="pill">Dessert</span>
-<span class="pill">Chocolate</span>
-<span class="pill">Marshmallow topping</span>
+<span class="pill">Stovetop</span>
 </div>
 </section>
 <div class="content">
 <div class="box">
-<h3>Cake Ingredients</h3>
-<ul class="checklist" data-group="mudcake">
-<li><input id="mm1" type="checkbox"/><label for="mm1">2 cups sugar</label></li>
-<li><input id="mm2" type="checkbox"/><label for="mm2">4 eggs</label></li>
-<li><input id="mm3" type="checkbox"/><label for="mm3">¾ cup self-rising flour</label></li>
-<li><input id="mm4" type="checkbox"/><label for="mm4">2 sticks melted butter</label></li>
-<li><input id="mm5" type="checkbox"/><label for="mm5">2 teaspoons vanilla</label></li>
-<li><input id="mm6" type="checkbox"/><label for="mm6">1 cup pecans</label></li>
-<li><input id="mm7" type="checkbox"/><label for="mm7">⅓ cup cocoa</label></li>
-<li><input id="mm8" type="checkbox"/><label for="mm8">Mini marshmallows or marshmallow creme (for topping)</label></li>
+<h3>Ingredients</h3>
+<ul class="checklist" data-group="eggCustard">
+<li><input id="ec1" type="checkbox"/><label for="ec1">3 eggs</label></li>
+<li><input id="ec2" type="checkbox"/><label for="ec2">¾ cup sugar</label></li>
+<li><input id="ec3" type="checkbox"/><label for="ec3">1 tablespoon vanilla extract</label></li>
+<li><input id="ec4" type="checkbox"/><label for="ec4">3 cups milk (divided)</label></li>
+<li><input id="ec5" type="checkbox"/><label for="ec5">¼ cup cornstarch</label></li>
+<li><input id="ec6" type="checkbox"/><label for="ec6">½ stick (4 tablespoons) butter</label></li>
 </ul>
 <div class="controls">
-<button onclick="resetGroup('mudcake')" type="button">Reset checkboxes</button>
-<button onclick="printSection('mississippi-mud')" type="button">Print this recipe</button>
+<button onclick="resetGroup('eggCustard')" type="button">Reset checkboxes</button>
+<button onclick="printSection('egg-custard')" type="button">Print this recipe</button>
 </div>
 </div>
 <div class="box">
 <h3>Instructions</h3>
 <ol class="steps">
-<li>Mix cake ingredients together until combined.</li>
-<li>Bake for about 25 minutes (time and pan size can vary).</li>
-<li>While hot, put mini marshmallows (or marshmallow creme) on top.</li>
-<li>Spread chocolate icing over the marshmallow layer.</li>
+<li>In a medium saucepan, combine eggs, sugar, and vanilla. Stir well.</li>
+<li>Add 2½ cups of milk and whisk to combine.</li>
+<li>In a small bowl, mix the remaining ½ cup of milk with the cornstarch until smooth.</li>
+<li>Add the cornstarch slurry to the saucepan and whisk until incorporated.</li>
+<li>Add the butter and place the saucepan over medium heat.</li>
+<li>Cook, stirring constantly, until the mixture thickens (around 10 minutes).</li>
+<li>Remove from heat. Pour into serving dishes and chill.</li>
 </ol>
-<details style="margin-top:12px;">
-<summary>Chocolate Icing (for Mississippi Mud Cake)</summary>
-<div class="detail-body">
-<ul class="checklist" data-group="mudicing">
-<li><input id="mi1" type="checkbox"/><label for="mi1">1 stick butter</label></li>
-<li><input id="mi2" type="checkbox"/><label for="mi2">2 cups powdered sugar</label></li>
-<li><input id="mi3" type="checkbox"/><label for="mi3">¼ cup cocoa</label></li>
-<li><input id="mi4" type="checkbox"/><label for="mi4">1 teaspoon vanilla</label></li>
-</ul>
-<p class="notes" style="margin-top:10px;">
-                Notes: Mix until smooth and spread over the marshmallow layer while the cake is still warm.
-              </p>
-<div class="controls">
-<button onclick="resetGroup('mudicing')" type="button">Reset checkboxes</button>
+<p class="notes">
+            Serve chilled. Top with fresh berries or a sprinkle of nutmeg if desired.
+          </p>
 </div>
 </div>
-</details>
-</div>
-</div>
-<!-- Divider: Savory -->
-<section class="divider-page" id="savory">
-<h2 class="divider-title">Savory</h2>
-<div class="divider-rule"></div>
-<div class="divider-actions">
-<a href="#texas-chowchow">Texas Chow Chow</a>
-<a href="#collard-greens">Instant Pot Collard Greens</a>
+<!-- Sweet Potato Pie -->
+<section class="section" id="sweet-potato-pie">
+<h2>Sweet Potato Pie</h2>
+<div class="meta">
+<span class="pill">Dessert</span>
+<span class="pill">Bake 350°F, 35 min</span>
 </div>
 </section>
-<!-- Texas Chow Chow -->
+<div class="content">
+<div class="box">
+<h3>Ingredients</h3>
+<ul class="checklist" data-group="sweetPotatoPie">
+<li><input id="spp1" type="checkbox"/><label for="spp1">1½ cups mashed cooked sweet potatoes</label></li>
+<li><input id="spp2" type="checkbox"/><label for="spp2">1 cup sugar</label></li>
+<li><input id="spp3" type="checkbox"/><label for="spp3">3 eggs</label></li>
+<li><input id="spp4" type="checkbox"/><label for="spp4">½ stick (4 tablespoons) butter, melted</label></li>
+<li><input id="spp5" type="checkbox"/><label for="spp5">1 (5-oz) can evaporated milk</label></li>
+<li><input id="spp6" type="checkbox"/><label for="spp6">1 teaspoon vanilla extract</label></li>
+<li><input id="spp7" type="checkbox"/><label for="spp7">½ teaspoon nutmeg</label></li>
+<li><input id="spp8" type="checkbox"/><label for="spp8">1 unbaked 9-inch pie shell</label></li>
+</ul>
+<div class="controls">
+<button onclick="resetGroup('sweetPotatoPie')" type="button">Reset checkboxes</button>
+<button onclick="printSection('sweet-potato-pie')" type="button">Print this recipe</button>
+</div>
+</div>
+<div class="box">
+<h3>Directions</h3>
+<ol class="steps">
+<li>Preheat oven to 350°F.</li>
+<li>In a large bowl, combine mashed sweet potatoes, sugar, eggs, melted butter, evaporated milk, vanilla, and nutmeg. Mix well until smooth.</li>
+<li>Pour filling into the unbaked pie shell.</li>
+<li>Bake for about 35 minutes, or until the filling is set and slightly puffed.</li>
+<li>Cool to room temperature before serving.</li>
+</ol>
+<p class="notes">
+            For extra sweetness, top with whipped cream or marshmallows during the last few minutes of baking.
+          </p>
+</div>
+</div>
+<!-- Texas Chow-Chow -->
 <section class="section" id="texas-chowchow">
-<h2>Texas Chow Chow</h2>
+<h2>Texas Chow-Chow</h2>
 <div class="meta">
-<span class="pill">Condiment</span>
+<span class="pill">Preserved</span>
+<span class="pill">Canning</span>
 <span class="pill">Heritage</span>
-<span class="pill">Batch recipe</span>
 </div>
 </section>
 <div class="content">
 <div class="box">
-<h3>Ingredients (as written)</h3>
+<h3>Ingredients</h3>
 <ul class="checklist" data-group="chowchow">
-<li><input id="tc1" type="checkbox"/><label for="tc1">6½ lbs green tomatoes (about 1 gallon chopped)</label></li>
-<li><input id="tc2" type="checkbox"/><label for="tc2">6 lbs onions</label></li>
+<li><input id="tc1" type="checkbox"/><label for="tc1">6 lbs tomatoes (green or red)</label></li>
+<li><input id="tc2" type="checkbox"/><label for="tc2">7 lbs onions</label></li>
 <li><input id="tc3" type="checkbox"/><label for="tc3">10 lbs cabbage</label></li>
 <li><input id="tc4" type="checkbox"/><label for="tc4">¼ lb hot peppers (mixed red &amp; green)</label></li>
 <li><input id="tc5" type="checkbox"/><label for="tc5">4 bell peppers (2 red, 2 green)</label></li>
@@ -903,14 +688,18 @@
 </ol>
 </div>
 </div>
+
+<!-- Dynamic Recipes Container -->
+<div id="dynamic-recipes-container"></div>
+
 <!-- Source + End -->
-<div id="dynamic-recipes"></div><section class="section" id="source">
+<section class="section" id="source">
 <h2>Source Notes</h2>
 </section>
 <div class="content" style="margin-bottom:0;">
 <div class="box" style="grid-column:1/-1;">
 <p class="notes" style="margin:0;">
-            All recipes above were transcribed from handwritten and typed pages.
+            All recipes above were transcribed from handwritten and typed pages. Dynamic recipes loaded from Google Sheets.
           </p>
 <div class="controls">
 <button onclick="window.location.href='#top'" type="button">Back to top</button>
@@ -923,6 +712,7 @@
       <a class="show-cover" href="#" onclick="showCover(); return false;">Show cover</a>
 </div>
 </div>
+
 <script>
     // Reset all checkboxes within a named group
     function resetGroup(groupName){
@@ -1031,61 +821,199 @@
         }
       } catch(e){}
     })();
-  </script>
+</script>
+
 <script>
-const sheetURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSfZkZn3OuZSWMbxsASOLj0adOB7Navcv5lQ0L_XH-Wl5l0YpWLwboQsXBalf0tqBkDN_ZQp0dnrAva/pubhtml';
-    fetch(sheetURL)
-  .then(response => response.text())
-  .then(data => {
-    const rows = data.trim().split('\n').map(row => row.split('\t'));
-    const categories = {}; // cache sections by category name
+// ============================================================================
+// GOOGLE SHEETS DYNAMIC RECIPE LOADER
+// ============================================================================
 
-    for (let i = 1; i < rows.length; i++) {
-      const row = rows[i];
-      const title = row[0]?.trim();
-      const ingredients = row[1]?.trim();
-      const steps = row[2]?.trim();
-      const notes = row[3]?.trim();
-      const category = row[4]?.trim();
+// Your Google Sheet must be published to web as CSV
+// Instructions:
+// 1. In Google Sheets: File > Share > Publish to web
+// 2. Choose "Entire Document" or specific sheet
+// 3. Select "Comma-separated values (.csv)" format
+// 4. Click Publish and copy the URL
+// 5. Replace the URL below with your published CSV URL
 
-      if (!title || !category) continue;
+const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSfZkZn3OuZSWMbxsASOLj0adOB7Navcv5lQ0L_XH-Wl5l0YpWLwboQsXBalf0tqBkDN_ZQp0dnrAva/pub?output=csv';
 
-      let section = categories[category];
-      if (!section) {
-        // Try to find existing category section in DOM
-        section = document.getElementById(category);
-        
-        // If not found, create new section above Source Notes
-        if (!section) {
-          section = document.createElement('div');
-          section.id = category;
-          section.innerHTML = `<h2>${category}</h2>`;
-          
-          const sourceNotes = document.getElementById('source-notes');
-          if (sourceNotes) {
-            sourceNotes.parentNode.insertBefore(section, sourceNotes);
-          } else {
-            document.getElementById('main-content').appendChild(section);
-          }
-        }
+// Expected CSV columns (in order):
+// Timestamp, Title, Category, Tags, Time, Ingredients, Directions, Notes
 
-        categories[category] = section;
-      }
+let recipeCounter = 0; // For generating unique IDs
 
-      // Add the recipe card
-      const recipeHTML = `
-        <div class="recipe-card">
-          <h3>${title}</h3>
-          <h4>Ingredients</h4>
-          <p>${ingredients}</p>
-          <h4>Steps</h4>
-          <p>${steps}</p>
-          ${notes ? `<h4>Notes</h4><p>${notes}</p>` : ''}
+function sanitizeId(str) {
+  return str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
+function parseCSV(text) {
+  const lines = text.split('\n');
+  const result = [];
+  
+  for (let i = 1; i < lines.length; i++) { // Skip header row
+    const line = lines[i].trim();
+    if (!line) continue;
+    
+    const row = line.split(',').map(cell => cell.trim());
+    result.push(row);
+  }
+  
+  return result;
+}
+
+function createDynamicRecipe(data) {
+  // Skip timestamp in column A (index 0)
+  const [timestamp, title, category, tags, time, ingredients, directions, notes] = data;
+  
+  if (!title) return ''; // Skip empty rows
+  
+  recipeCounter++;
+  const recipeId = sanitizeId(title) || `recipe-${recipeCounter}`;
+  const groupName = `dynamic-${recipeCounter}`;
+  
+  // Parse tags (comma-separated)
+  const tagsList = tags ? tags.split('|').map(t => t.trim()).filter(Boolean) : [];
+  
+  // Parse ingredients (line-separated with | or newline)
+  const ingredientsList = ingredients ? ingredients.split('|').map(i => i.trim()).filter(Boolean) : [];
+  
+  // Parse directions (line-separated with | or newline)
+  const directionsList = directions ? directions.split('|').map(d => d.trim()).filter(Boolean) : [];
+  
+  // Build the pills (tags + time if provided)
+  let pillsHTML = '';
+  if (category) {
+    pillsHTML += `<span class="pill">${category}</span>`;
+  }
+  tagsList.forEach(tag => {
+    pillsHTML += `<span class="pill">${tag}</span>`;
+  });
+  if (time) {
+    pillsHTML += `<span class="pill">${time}</span>`;
+  }
+  
+  // Build ingredients checklist
+  let ingredientsHTML = '';
+  ingredientsList.forEach((ingredient, idx) => {
+    const inputId = `${groupName}-ing-${idx}`;
+    ingredientsHTML += `
+      <li>
+        <input id="${inputId}" type="checkbox"/>
+        <label for="${inputId}">${ingredient}</label>
+      </li>
+    `;
+  });
+  
+  // Build directions steps
+  let directionsHTML = '';
+  directionsList.forEach(step => {
+    directionsHTML += `<li>${step}</li>`;
+  });
+  
+  // Build notes section
+  let notesHTML = '';
+  if (notes) {
+    notesHTML = `<p class="notes">${notes}</p>`;
+  }
+  
+  // Assemble the complete recipe HTML matching your format
+  return `
+    <section class="section" id="${recipeId}">
+      <h2>${title}</h2>
+      ${pillsHTML ? `<div class="meta">${pillsHTML}</div>` : ''}
+    </section>
+    <div class="content">
+      <div class="box">
+        <h3>Ingredients</h3>
+        <ul class="checklist" data-group="${groupName}">
+          ${ingredientsHTML}
+        </ul>
+        <div class="controls">
+          <button type="button" onclick="resetGroup('${groupName}')">Reset checkboxes</button>
+          <button type="button" onclick="printSection('${recipeId}')">Print this recipe</button>
         </div>
-      `;
-      section.insertAdjacentHTML('beforeend', recipeHTML);
+      </div>
+      <div class="box">
+        <h3>Directions</h3>
+        <ol class="steps">
+          ${directionsHTML}
+        </ol>
+        ${notesHTML}
+      </div>
+    </div>
+  `;
+}
+
+function loadDynamicRecipes() {
+  // Don't load if URL is not configured
+  if (!GOOGLE_SHEET_CSV_URL || GOOGLE_SHEET_CSV_URL === 'YOUR_PUBLISHED_CSV_URL_HERE') {
+    console.log('Google Sheets CSV URL not configured. Skipping dynamic recipes.');
+    return;
+  }
+  
+  fetch(GOOGLE_SHEET_CSV_URL)
+    .then(response => {
+      if (!response.ok) throw new Error('Failed to fetch Google Sheet');
+      return response.text();
+    })
+    .then(csvText => {
+      const rows = parseCSV(csvText);
+      const container = document.getElementById('dynamic-recipes-container');
+      
+      if (!container) {
+        console.error('Dynamic recipes container not found');
+        return;
+      }
+      
+      let recipesHTML = '';
+      rows.forEach(row => {
+        recipesHTML += createDynamicRecipe(row);
+      });
+      
+      container.innerHTML = recipesHTML;
+      
+      // Update TOC if needed
+      updateTOC();
+      
+      console.log(`Loaded ${rows.length} dynamic recipes from Google Sheets`);
+    })
+    .catch(error => {
+      console.error('Error loading dynamic recipes:', error);
+    });
+}
+
+function updateTOC() {
+  // Optional: Dynamically update the table of contents
+  const tocList = document.querySelector('.toc-list');
+  if (!tocList) return;
+  
+  // Find all section headers
+  const allSections = document.querySelectorAll('.section[id]');
+  
+  // Clear existing TOC (except last "Source Notes" item)
+  tocList.innerHTML = '';
+  
+  allSections.forEach(section => {
+    const id = section.id;
+    const title = section.querySelector('h2')?.textContent || 'Untitled';
+    
+    if (id !== 'source') { // Don't duplicate source notes
+      const li = document.createElement('li');
+      li.innerHTML = `<a href="#${id}" onclick="closeTOC()">${title}</a>`;
+      tocList.appendChild(li);
     }
   });
+  
+  // Add source notes back at the end
+  const li = document.createElement('li');
+  li.innerHTML = `<a href="#source" onclick="closeTOC()">Source Notes</a>`;
+  tocList.appendChild(li);
+}
+
+// Load recipes when page loads
+window.addEventListener('DOMContentLoaded', loadDynamicRecipes);
 </script>
+
 </body>
 </html>
